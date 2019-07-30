@@ -1,0 +1,6 @@
+http://ericpbi /Reports_test/Shared/staff_test_Sh
+http://ericpbi /Reports_test/Shared/staff_test_Sh_EmSet
+http://ericpbi /Reports_test/Shared/test_1xSh1xEmSameDB_EmSet
+http://ericpbi /Reports_test/Shared/test_2xShSameDB_EmSet
+http://ericpbi /Reports_test/Shared/test_3xShsameDBdiffAuth_EmSet
+http://rosereportsppe /Rosetta/Eric/Shared/SharedDsReport

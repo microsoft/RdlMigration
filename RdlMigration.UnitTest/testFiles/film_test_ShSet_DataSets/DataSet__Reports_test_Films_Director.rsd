@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<SharedDataSet xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition">
+  <DataSet Name="/Reports_test/Films_Director">
+    <Query>
+      <DataSourceReference>/Reports_test/Movies</DataSourceReference>
+      <CommandText>SELECT
+  Film.FilmID
+  ,Film.Title
+  ,Film.ReleaseDate
+  ,Film.DirectorID AS [Film DirectorID]
+  ,Film.StudioID
+  ,Film.Review
+  ,Film.CountryID
+  ,Film.LanguageID
+  ,Film.GenreID
+  ,Film.RunTimeMinutes
+  ,Film.CertificateID
+  ,Film.BudgetDollars
+  ,Film.BoxOfficeDollars
+  ,Film.OscarNominations
+  ,Film.OscarWins
+  ,Director.DirectorID AS [Director DirectorID]
+  ,Director.FirstName
+  ,Director.FamilyName
+  ,Director.FullName
+  ,Director.DoB
+  ,Director.DoD
+  ,Director.Gender
+FROM
+  Director
+  INNER JOIN Film
+    ON Director.DirectorID = Film.DirectorID</CommandText>
+      <rd:DesignerState>
+        <QueryDefinition xmlns="http://schemas.microsoft.com/ReportingServices/QueryDefinition/Relational">
+          <SelectedColumns>
+            <ColumnExpression ColumnOwner="Film" ColumnName="FilmID" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="Title" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="ReleaseDate" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="DirectorID" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="StudioID" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="Review" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="CountryID" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="LanguageID" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="GenreID" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="RunTimeMinutes" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="CertificateID" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="BudgetDollars" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="BoxOfficeDollars" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="OscarNominations" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="OscarWins" />
+            <ColumnExpression ColumnOwner="Director" ColumnName="DirectorID" />
+            <ColumnExpression ColumnOwner="Director" ColumnName="FirstName" />
+            <ColumnExpression ColumnOwner="Director" ColumnName="FamilyName" />
+            <ColumnExpression ColumnOwner="Director" ColumnName="FullName" />
+            <ColumnExpression ColumnOwner="Director" ColumnName="DoB" />
+            <ColumnExpression ColumnOwner="Director" ColumnName="DoD" />
+            <ColumnExpression ColumnOwner="Director" ColumnName="Gender" />
+          </SelectedColumns>
+          <Joins>
+            <Join Type="CROSS JOIN" ColumnOwner="Director" />
+            <Join Type="INNER JOIN" ColumnOwner="Film">
+              <On>
+                <From ColumnOwner="Director" ColumnName="DirectorID" />
+                <To ColumnOwner="Film" ColumnName="DirectorID" />
+              </On>
+            </Join>
+          </Joins>
+        </QueryDefinition>
+      </rd:DesignerState>
+    </Query>
+    <Fields>
+      <Field Name="FilmID">
+        <DataField>FilmID</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="Title">
+        <DataField>Title</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="ReleaseDate">
+        <DataField>ReleaseDate</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="Film_DirectorID">
+        <DataField>Film DirectorID</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="StudioID">
+        <DataField>StudioID</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="Review">
+        <DataField>Review</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="CountryID">
+        <DataField>CountryID</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="LanguageID">
+        <DataField>LanguageID</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="GenreID">
+        <DataField>GenreID</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="RunTimeMinutes">
+        <DataField>RunTimeMinutes</DataField>
+        <rd:TypeName>System.Int16</rd:TypeName>
+      </Field>
+      <Field Name="CertificateID">
+        <DataField>CertificateID</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="BudgetDollars">
+        <DataField>BudgetDollars</DataField>
+        <rd:TypeName>System.Int64</rd:TypeName>
+      </Field>
+      <Field Name="BoxOfficeDollars">
+        <DataField>BoxOfficeDollars</DataField>
+        <rd:TypeName>System.Int64</rd:TypeName>
+      </Field>
+      <Field Name="OscarNominations">
+        <DataField>OscarNominations</DataField>
+        <rd:TypeName>System.Byte</rd:TypeName>
+      </Field>
+      <Field Name="OscarWins">
+        <DataField>OscarWins</DataField>
+        <rd:TypeName>System.Byte</rd:TypeName>
+      </Field>
+      <Field Name="Director_DirectorID">
+        <DataField>Director DirectorID</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="FirstName">
+        <DataField>FirstName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="FamilyName">
+        <DataField>FamilyName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="FullName">
+        <DataField>FullName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="DoB">
+        <DataField>DoB</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="DoD">
+        <DataField>DoD</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="Gender">
+        <DataField>Gender</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

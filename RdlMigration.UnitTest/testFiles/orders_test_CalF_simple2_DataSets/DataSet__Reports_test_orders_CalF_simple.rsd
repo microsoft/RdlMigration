@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<SharedDataSet xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition">
+  <DataSet Name="/Reports_test/orders_CalF_simple">
+    <Query>
+      <DataSourceReference>/Reports_test/BikeStore</DataSourceReference>
+      <CommandText>SELECT
+  sales.customers.customer_id
+  ,sales.customers.first_name
+  ,sales.customers.last_name
+  ,sales.customers.phone
+  ,sales.customers.email
+  ,sales.customers.street
+  ,sales.customers.city
+  ,sales.customers.[state]
+  ,sales.customers.zip_code
+FROM
+  sales.customers</CommandText>
+      <rd:DesignerState>
+        <QueryDefinition xmlns="http://schemas.microsoft.com/ReportingServices/QueryDefinition/Relational">
+          <SelectedColumns>
+            <ColumnExpression Schema="sales" ColumnOwner="customers" ColumnName="customer_id" />
+            <ColumnExpression Schema="sales" ColumnOwner="customers" ColumnName="first_name" />
+            <ColumnExpression Schema="sales" ColumnOwner="customers" ColumnName="last_name" />
+            <ColumnExpression Schema="sales" ColumnOwner="customers" ColumnName="phone" />
+            <ColumnExpression Schema="sales" ColumnOwner="customers" ColumnName="email" />
+            <ColumnExpression Schema="sales" ColumnOwner="customers" ColumnName="street" />
+            <ColumnExpression Schema="sales" ColumnOwner="customers" ColumnName="city" />
+            <ColumnExpression Schema="sales" ColumnOwner="customers" ColumnName="state" />
+            <ColumnExpression Schema="sales" ColumnOwner="customers" ColumnName="zip_code" />
+          </SelectedColumns>
+        </QueryDefinition>
+      </rd:DesignerState>
+    </Query>
+    <Fields>
+      <Field Name="customer_id">
+        <DataField>customer_id</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="first_name">
+        <DataField>first_name</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="last_name">
+        <DataField>last_name</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="phone">
+        <DataField>phone</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="email">
+        <DataField>email</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="street">
+        <DataField>street</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="city">
+        <DataField>city</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="state">
+        <DataField>state</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="zip_code">
+        <DataField>zip_code</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="like_be_called">
+        <Value>=IIf(Fields!state.Value="NY","New Yorker","Nothing Special")</Value>
+      </Field>
+      <Field Name="look_at_whos_here">
+        <Value>=User!UserID</Value>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

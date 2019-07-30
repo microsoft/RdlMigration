@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<SharedDataSet xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition">
+  <DataSet Name="/Reports_test/enterdata_2">
+    <Query>
+      <DataSourceReference>/Reports_test/ENTERDATA</DataSourceReference>
+      <DataSetParameters>
+        <DataSetParameter Name="Multiplier">
+          <DefaultValue>1</DefaultValue>
+          <ReadOnly>false</ReadOnly>
+          <Nullable>false</Nullable>
+          <OmitFromQuery>false</OmitFromQuery>
+          <rd:UserDefined>true</rd:UserDefined>
+          <rd:DbType>Int32</rd:DbType>
+        </DataSetParameter>
+      </DataSetParameters>
+      <CommandText>&lt;Query&gt;
+  &lt;XmlData&gt;
+    &lt;Data&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;222&lt;/NewColumn0&gt;
+        &lt;Multiplication&gt;&lt;/Multiplication&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;333&lt;/NewColumn0&gt;
+        &lt;Multiplication&gt;&lt;/Multiplication&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;444&lt;/NewColumn0&gt;
+        &lt;Multiplication&gt;&lt;/Multiplication&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;555&lt;/NewColumn0&gt;
+        &lt;Multiplication&gt;&lt;/Multiplication&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;6&lt;/NewColumn0&gt;
+        &lt;Multiplication&gt;&lt;/Multiplication&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;7&lt;/NewColumn0&gt;
+        &lt;Multiplication&gt;&lt;/Multiplication&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;8888&lt;/NewColumn0&gt;
+        &lt;Multiplication&gt;&lt;/Multiplication&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;9999&lt;/NewColumn0&gt;
+        &lt;Multiplication&gt;&lt;/Multiplication&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;800&lt;/NewColumn0&gt;
+        &lt;Multiplication&gt;&lt;/Multiplication&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;&lt;/NewColumn0&gt;
+        &lt;Multiplication&gt;&lt;/Multiplication&gt;
+      &lt;/Row&gt;
+    &lt;/Data&gt;
+  &lt;/XmlData&gt;
+  &lt;ElementPath&gt;Data{}/Row{NewColumn0(Integer),Multiplication(Integer)}&lt;/ElementPath&gt;
+&lt;/Query&gt;</CommandText>
+      <rd:DesignerState>
+        <DataGrid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="">
+          <RowNumber>10</RowNumber>
+          <ColumnNumber>2</ColumnNumber>
+          <ColumnName ColumnIndex="0" ColumnWidth="100" DataType="Integer">NewColumn0</ColumnName>
+          <ColumnName ColumnIndex="1" ColumnWidth="100" DataType="Integer">Multiplication</ColumnName>
+          <Data ColumnIndex="0" RowIndex="0">222</Data>
+          <Data ColumnIndex="1" RowIndex="0" />
+          <Data ColumnIndex="0" RowIndex="1">333</Data>
+          <Data ColumnIndex="1" RowIndex="1" />
+          <Data ColumnIndex="0" RowIndex="2">444</Data>
+          <Data ColumnIndex="1" RowIndex="2" />
+          <Data ColumnIndex="0" RowIndex="3">555</Data>
+          <Data ColumnIndex="1" RowIndex="3" />
+          <Data ColumnIndex="0" RowIndex="4">6</Data>
+          <Data ColumnIndex="1" RowIndex="4" />
+          <Data ColumnIndex="0" RowIndex="5">7</Data>
+          <Data ColumnIndex="1" RowIndex="5" />
+          <Data ColumnIndex="0" RowIndex="6">8888</Data>
+          <Data ColumnIndex="1" RowIndex="6" />
+          <Data ColumnIndex="0" RowIndex="7">9999</Data>
+          <Data ColumnIndex="1" RowIndex="7" />
+          <Data ColumnIndex="0" RowIndex="8">800</Data>
+          <Data ColumnIndex="1" RowIndex="8" />
+          <Data ColumnIndex="0" RowIndex="9" />
+          <Data ColumnIndex="1" RowIndex="9" />
+        </DataGrid>
+      </rd:DesignerState>
+    </Query>
+    <Fields>
+      <Field Name="NewColumn0">
+        <DataField>NewColumn0</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="Multiplication">
+        <DataField>Multiplication</DataField>
+        <rd:UserDefined>true</rd:UserDefined>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<SharedDataSet xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition">
+  <DataSet Name="/Reports_test/brands_sh">
+    <Query>
+      <DataSourceReference>/Reports_test/BikeStore</DataSourceReference>
+      <CommandText>SELECT
+  production.brands.brand_id
+  ,production.brands.brand_name
+FROM
+  production.brands</CommandText>
+      <rd:DesignerState>
+        <QueryDefinition xmlns="http://schemas.microsoft.com/ReportingServices/QueryDefinition/Relational">
+          <SelectedColumns>
+            <ColumnExpression Schema="production" ColumnOwner="brands" ColumnName="brand_id" />
+            <ColumnExpression Schema="production" ColumnOwner="brands" ColumnName="brand_name" />
+          </SelectedColumns>
+        </QueryDefinition>
+      </rd:DesignerState>
+    </Query>
+    <Fields>
+      <Field Name="brand_id">
+        <DataField>brand_id</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="brand_name">
+        <DataField>brand_name</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

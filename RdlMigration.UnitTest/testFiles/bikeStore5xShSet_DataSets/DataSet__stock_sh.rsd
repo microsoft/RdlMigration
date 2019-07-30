@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<SharedDataSet xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition">
+  <DataSet Name="/stock_sh">
+    <Query>
+      <DataSourceReference>/Reports_test/BikeStore</DataSourceReference>
+      <CommandText>SELECT
+  production.stocks.store_id
+  ,production.stocks.product_id
+  ,production.stocks.quantity
+FROM
+  production.stocks</CommandText>
+      <rd:DesignerState>
+        <QueryDefinition xmlns="http://schemas.microsoft.com/ReportingServices/QueryDefinition/Relational">
+          <SelectedColumns>
+            <ColumnExpression Schema="production" ColumnOwner="stocks" ColumnName="store_id" />
+            <ColumnExpression Schema="production" ColumnOwner="stocks" ColumnName="product_id" />
+            <ColumnExpression Schema="production" ColumnOwner="stocks" ColumnName="quantity" />
+          </SelectedColumns>
+        </QueryDefinition>
+      </rd:DesignerState>
+    </Query>
+    <Fields>
+      <Field Name="store_id">
+        <DataField>store_id</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="product_id">
+        <DataField>product_id</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="quantity">
+        <DataField>quantity</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

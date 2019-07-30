@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<SharedDataSet xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition">
+  <DataSet Name="/Reports_test/orderItem_filter_Simple">
+    <Query>
+      <DataSourceReference>/Reports_test/BikeStore</DataSourceReference>
+      <CommandText>SELECT
+  sales.order_items.order_id
+  ,sales.order_items.item_id
+  ,sales.order_items.product_id
+  ,sales.order_items.quantity
+  ,sales.order_items.list_price
+  ,sales.order_items.discount
+FROM
+  sales.order_items</CommandText>
+      <rd:DesignerState>
+        <QueryDefinition xmlns="http://schemas.microsoft.com/ReportingServices/QueryDefinition/Relational">
+          <SelectedColumns>
+            <ColumnExpression Schema="sales" ColumnOwner="order_items" ColumnName="order_id" />
+            <ColumnExpression Schema="sales" ColumnOwner="order_items" ColumnName="item_id" />
+            <ColumnExpression Schema="sales" ColumnOwner="order_items" ColumnName="product_id" />
+            <ColumnExpression Schema="sales" ColumnOwner="order_items" ColumnName="quantity" />
+            <ColumnExpression Schema="sales" ColumnOwner="order_items" ColumnName="list_price" />
+            <ColumnExpression Schema="sales" ColumnOwner="order_items" ColumnName="discount" />
+          </SelectedColumns>
+        </QueryDefinition>
+      </rd:DesignerState>
+    </Query>
+    <Fields>
+      <Field Name="order_id">
+        <DataField>order_id</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="item_id">
+        <DataField>item_id</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="product_id">
+        <DataField>product_id</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="quantity">
+        <DataField>quantity</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="list_price">
+        <DataField>list_price</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="discount">
+        <DataField>discount</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+    </Fields>
+    <Filters>
+      <Filter>
+        <FilterExpression>=Fields!list_price.Value</FilterExpression>
+        <Operator>LessThan</Operator>
+        <FilterValues>
+          <FilterValue DataType="Integer">300</FilterValue>
+        </FilterValues>
+      </Filter>
+      <Filter>
+        <FilterExpression>=Fields!product_id.Value</FilterExpression>
+        <Operator>LessThanOrEqual</Operator>
+        <FilterValues>
+          <FilterValue DataType="Integer">30</FilterValue>
+        </FilterValues>
+      </Filter>
+    </Filters>
+  </DataSet>
+</SharedDataSet>

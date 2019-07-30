@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<SharedDataSet xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition">
+  <DataSet Name="/Reports_test/Films">
+    <Query>
+      <DataSourceReference>/Reports_test/Movies</DataSourceReference>
+      <CommandText>SELECT
+  Film.FilmID
+  ,Film.Title
+  ,Film.ReleaseDate
+  ,Film.DirectorID
+  ,Film.StudioID
+  ,Film.Review
+  ,Film.CountryID
+  ,Film.LanguageID
+  ,Film.GenreID
+  ,Film.RunTimeMinutes
+  ,Film.CertificateID
+  ,Film.BudgetDollars
+  ,Film.BoxOfficeDollars
+  ,Film.OscarNominations
+  ,Film.OscarWins
+FROM
+  Film</CommandText>
+      <rd:DesignerState>
+        <QueryDefinition xmlns="http://schemas.microsoft.com/ReportingServices/QueryDefinition/Relational">
+          <SelectedColumns>
+            <ColumnExpression ColumnOwner="Film" ColumnName="FilmID" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="Title" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="ReleaseDate" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="DirectorID" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="StudioID" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="Review" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="CountryID" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="LanguageID" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="GenreID" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="RunTimeMinutes" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="CertificateID" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="BudgetDollars" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="BoxOfficeDollars" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="OscarNominations" />
+            <ColumnExpression ColumnOwner="Film" ColumnName="OscarWins" />
+          </SelectedColumns>
+        </QueryDefinition>
+      </rd:DesignerState>
+    </Query>
+    <Fields>
+      <Field Name="FilmID">
+        <DataField>FilmID</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="Title">
+        <DataField>Title</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="ReleaseDate">
+        <DataField>ReleaseDate</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="DirectorID">
+        <DataField>DirectorID</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="StudioID">
+        <DataField>StudioID</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="Review">
+        <DataField>Review</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="CountryID">
+        <DataField>CountryID</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="LanguageID">
+        <DataField>LanguageID</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="GenreID">
+        <DataField>GenreID</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="RunTimeMinutes">
+        <DataField>RunTimeMinutes</DataField>
+        <rd:TypeName>System.Int16</rd:TypeName>
+      </Field>
+      <Field Name="CertificateID">
+        <DataField>CertificateID</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="BudgetDollars">
+        <DataField>BudgetDollars</DataField>
+        <rd:TypeName>System.Int64</rd:TypeName>
+      </Field>
+      <Field Name="BoxOfficeDollars">
+        <DataField>BoxOfficeDollars</DataField>
+        <rd:TypeName>System.Int64</rd:TypeName>
+      </Field>
+      <Field Name="OscarNominations">
+        <DataField>OscarNominations</DataField>
+        <rd:TypeName>System.Byte</rd:TypeName>
+      </Field>
+      <Field Name="OscarWins">
+        <DataField>OscarWins</DataField>
+        <rd:TypeName>System.Byte</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

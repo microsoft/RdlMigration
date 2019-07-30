@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<SharedDataSet xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition">
+  <DataSet Name="/Reports_test/orders_3xCalF">
+    <Query>
+      <DataSourceReference>/Reports_test/BikeStore</DataSourceReference>
+      <CommandText>SELECT
+  sales.order_items.order_id
+  ,sales.order_items.item_id
+  ,sales.order_items.product_id
+  ,sales.order_items.quantity
+  ,sales.order_items.list_price
+  ,sales.order_items.discount
+FROM
+  sales.order_items</CommandText>
+      <rd:DesignerState>
+        <QueryDefinition xmlns="http://schemas.microsoft.com/ReportingServices/QueryDefinition/Relational">
+          <SelectedColumns>
+            <ColumnExpression Schema="sales" ColumnOwner="order_items" ColumnName="order_id" />
+            <ColumnExpression Schema="sales" ColumnOwner="order_items" ColumnName="item_id" />
+            <ColumnExpression Schema="sales" ColumnOwner="order_items" ColumnName="product_id" />
+            <ColumnExpression Schema="sales" ColumnOwner="order_items" ColumnName="quantity" />
+            <ColumnExpression Schema="sales" ColumnOwner="order_items" ColumnName="list_price" />
+            <ColumnExpression Schema="sales" ColumnOwner="order_items" ColumnName="discount" />
+          </SelectedColumns>
+        </QueryDefinition>
+      </rd:DesignerState>
+    </Query>
+    <Fields>
+      <Field Name="order_id_name">
+        <DataField>order_id</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="item_id_name">
+        <DataField>item_id</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="product_id_name">
+        <DataField>product_id</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="quantity_name">
+        <DataField>quantity</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="list_price_name">
+        <DataField>list_price</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="discount_name">
+        <DataField>discount</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="choose">
+        <Value>=Choose(2,"13","15","21")</Value>
+      </Field>
+      <Field Name="sale_price">
+        <Value>=Fields!list_price_name.Value*Fields!discount_name.Value</Value>
+      </Field>
+      <Field Name="HighLow">
+        <Value>=IIf(Fields!sale_price.Value &gt;= 100,"High","Low")</Value>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<SharedDataSet xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition">
+  <DataSet Name="/Reports_test/enterdata_filter_order">
+    <Query>
+      <DataSourceReference>/Reports_test/ENTERDATA</DataSourceReference>
+      <CommandText>&lt;Query&gt;
+  &lt;XmlData&gt;
+    &lt;Data&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;1&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;2&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;3&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;4&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;5&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;6&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;7&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;8&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;9&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;10&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;11&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;12&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;13&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;14&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;15&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;20&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;100&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;101&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;200&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;999&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;10000&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;11111&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+    &lt;/Data&gt;
+  &lt;/XmlData&gt;
+  &lt;ElementPath&gt;Data{}/Row{NewColumn0(Integer)}&lt;/ElementPath&gt;
+&lt;/Query&gt;</CommandText>
+      <rd:DesignerState>
+        <DataGrid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="">
+          <RowNumber>22</RowNumber>
+          <ColumnNumber>1</ColumnNumber>
+          <ColumnName ColumnIndex="0" ColumnWidth="100" DataType="Integer">NewColumn0</ColumnName>
+          <Data ColumnIndex="0" RowIndex="0">1</Data>
+          <Data ColumnIndex="0" RowIndex="1">2</Data>
+          <Data ColumnIndex="0" RowIndex="2">3</Data>
+          <Data ColumnIndex="0" RowIndex="3">4</Data>
+          <Data ColumnIndex="0" RowIndex="4">5</Data>
+          <Data ColumnIndex="0" RowIndex="5">6</Data>
+          <Data ColumnIndex="0" RowIndex="6">7</Data>
+          <Data ColumnIndex="0" RowIndex="7">8</Data>
+          <Data ColumnIndex="0" RowIndex="8">9</Data>
+          <Data ColumnIndex="0" RowIndex="9">10</Data>
+          <Data ColumnIndex="0" RowIndex="10">11</Data>
+          <Data ColumnIndex="0" RowIndex="11">12</Data>
+          <Data ColumnIndex="0" RowIndex="12">13</Data>
+          <Data ColumnIndex="0" RowIndex="13">14</Data>
+          <Data ColumnIndex="0" RowIndex="14">15</Data>
+          <Data ColumnIndex="0" RowIndex="15">20</Data>
+          <Data ColumnIndex="0" RowIndex="16">100</Data>
+          <Data ColumnIndex="0" RowIndex="17">101</Data>
+          <Data ColumnIndex="0" RowIndex="18">200</Data>
+          <Data ColumnIndex="0" RowIndex="19">999</Data>
+          <Data ColumnIndex="0" RowIndex="20">10000</Data>
+          <Data ColumnIndex="0" RowIndex="21">11111</Data>
+        </DataGrid>
+      </rd:DesignerState>
+    </Query>
+    <Fields>
+      <Field Name="NewColumn0">
+        <DataField>NewColumn0</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+    </Fields>
+    <Filters>
+      <Filter>
+        <FilterExpression>=Fields!NewColumn0.Value</FilterExpression>
+        <Operator>TopN</Operator>
+        <FilterValues>
+          <FilterValue DataType="Integer">10</FilterValue>
+        </FilterValues>
+      </Filter>
+      <Filter>
+        <FilterExpression>=Fields!NewColumn0.Value</FilterExpression>
+        <Operator>BottomN</Operator>
+        <FilterValues>
+          <FilterValue DataType="Integer">5</FilterValue>
+        </FilterValues>
+      </Filter>
+    </Filters>
+  </DataSet>
+</SharedDataSet>

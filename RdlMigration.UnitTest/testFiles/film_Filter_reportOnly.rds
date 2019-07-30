@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<DataSources>
+  <DataSourceDefinition Name="DataSource__Reports_test_Movies">
+    <Extension>SQL</Extension>
+    <ConnectString>Data Source=ERICPBI;Initial Catalog=Movies</ConnectString>
+    <UseOriginalConnectString>false</UseOriginalConnectString>
+    <OriginalConnectStringExpressionBased>false</OriginalConnectStringExpressionBased>
+    <CredentialRetrieval>Integrated</CredentialRetrieval>
+    <WindowsCredentials>false</WindowsCredentials>
+    <ImpersonateUser>false</ImpersonateUser>
+    <ImpersonateUserSpecified>true</ImpersonateUserSpecified>
+    <Prompt>Enter a user name and password to access the data source:</Prompt>
+    <Enabled>true</Enabled>
+    <EnabledSpecified>true</EnabledSpecified>
+  </DataSourceDefinition>
+</DataSources>

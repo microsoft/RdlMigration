@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<SharedDataSet xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition">
+  <DataSet Name="/Reports_test/staff_CalField">
+    <Query>
+      <DataSourceReference>/Reports_test/BikeStore</DataSourceReference>
+      <DataSetParameters>
+        <DataSetParameter Name="@store_id">
+          <DefaultValue>1</DefaultValue>
+          <ReadOnly>false</ReadOnly>
+          <Nullable>false</Nullable>
+          <OmitFromQuery>false</OmitFromQuery>
+          <rd:DbType>Int32</rd:DbType>
+        </DataSetParameter>
+      </DataSetParameters>
+      <CommandText>SELECT
+  sales.staffs.staff_id
+  ,sales.staffs.first_name
+  ,sales.staffs.last_name
+  ,sales.staffs.email
+  ,sales.staffs.phone
+  ,sales.staffs.active
+  ,sales.staffs.store_id
+  ,sales.staffs.manager_id
+FROM
+  sales.staffs
+WHERE
+  sales.staffs.store_id = @store_id</CommandText>
+      <rd:DesignerState>
+        <QueryDefinition xmlns="http://schemas.microsoft.com/ReportingServices/QueryDefinition/Relational">
+          <SelectedColumns>
+            <ColumnExpression Schema="sales" ColumnOwner="staffs" ColumnName="staff_id" />
+            <ColumnExpression Schema="sales" ColumnOwner="staffs" ColumnName="first_name" />
+            <ColumnExpression Schema="sales" ColumnOwner="staffs" ColumnName="last_name" />
+            <ColumnExpression Schema="sales" ColumnOwner="staffs" ColumnName="email" />
+            <ColumnExpression Schema="sales" ColumnOwner="staffs" ColumnName="phone" />
+            <ColumnExpression Schema="sales" ColumnOwner="staffs" ColumnName="active" />
+            <ColumnExpression Schema="sales" ColumnOwner="staffs" ColumnName="store_id" />
+            <ColumnExpression Schema="sales" ColumnOwner="staffs" ColumnName="manager_id" />
+          </SelectedColumns>
+          <Filters>
+            <Filter Operator="=" Param="True">
+              <ColumnExpression Schema="sales" ColumnOwner="staffs" ColumnName="store_id" />
+              <FilterValue>1</FilterValue>
+            </Filter>
+          </Filters>
+        </QueryDefinition>
+      </rd:DesignerState>
+    </Query>
+    <Fields>
+      <Field Name="staff_id">
+        <DataField>staff_id</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="first_name">
+        <DataField>first_name</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="last_name">
+        <DataField>last_name</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="email">
+        <DataField>email</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="phone">
+        <DataField>phone</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="active">
+        <DataField>active</DataField>
+        <rd:TypeName>System.Byte</rd:TypeName>
+      </Field>
+      <Field Name="store_id">
+        <DataField>store_id</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="manager_id">
+        <DataField>manager_id</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="dates">
+        <Value>=Now()</Value>
+      </Field>
+      <Field Name="calcfullname">
+        <Value>=Fields!first_name.Value + "  " + Fields!last_name.Value</Value>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

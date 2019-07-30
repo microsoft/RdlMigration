@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<SharedDataSet xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition">
+  <DataSet Name="/Reports_test/orders_3xfilter">
+    <Query>
+      <DataSourceReference>/Reports_test/BikeStore</DataSourceReference>
+      <DataSetParameters>
+        <DataSetParameter Name="@order_date">
+          <DefaultValue>01/01/2018 00:00:00</DefaultValue>
+          <ReadOnly>false</ReadOnly>
+          <Nullable>false</Nullable>
+          <OmitFromQuery>false</OmitFromQuery>
+          <rd:DbType>DateTime</rd:DbType>
+          <rd:IsMultiValued>false</rd:IsMultiValued>
+        </DataSetParameter>
+      </DataSetParameters>
+      <CommandText>SELECT
+  sales.orders.order_id
+  ,sales.orders.customer_id
+  ,sales.orders.order_status
+  ,sales.orders.order_date
+  ,sales.orders.required_date
+  ,sales.orders.shipped_date
+  ,sales.orders.store_id
+  ,sales.orders.staff_id
+FROM
+  sales.orders
+WHERE
+  sales.orders.staff_id &lt; 6
+  AND sales.orders.order_date &lt; @order_date
+  AND sales.orders.store_id = 1</CommandText>
+      <rd:DesignerState>
+        <QueryDefinition xmlns="http://schemas.microsoft.com/ReportingServices/QueryDefinition/Relational">
+          <SelectedColumns>
+            <ColumnExpression Schema="sales" ColumnOwner="orders" ColumnName="order_id" />
+            <ColumnExpression Schema="sales" ColumnOwner="orders" ColumnName="customer_id" />
+            <ColumnExpression Schema="sales" ColumnOwner="orders" ColumnName="order_status" />
+            <ColumnExpression Schema="sales" ColumnOwner="orders" ColumnName="order_date" />
+            <ColumnExpression Schema="sales" ColumnOwner="orders" ColumnName="required_date" />
+            <ColumnExpression Schema="sales" ColumnOwner="orders" ColumnName="shipped_date" />
+            <ColumnExpression Schema="sales" ColumnOwner="orders" ColumnName="store_id" />
+            <ColumnExpression Schema="sales" ColumnOwner="orders" ColumnName="staff_id" />
+          </SelectedColumns>
+          <Filters>
+            <Filter Operator="&lt;">
+              <ColumnExpression Schema="sales" ColumnOwner="orders" ColumnName="staff_id" />
+              <FilterValue>6</FilterValue>
+            </Filter>
+            <Filter Operator="&lt;" Param="True">
+              <ColumnExpression Schema="sales" ColumnOwner="orders" ColumnName="order_date" />
+              <FilterValue>01/01/2018 00:00:00</FilterValue>
+            </Filter>
+            <Filter Operator="=">
+              <ColumnExpression Schema="sales" ColumnOwner="orders" ColumnName="store_id" />
+              <FilterValue>1</FilterValue>
+            </Filter>
+          </Filters>
+        </QueryDefinition>
+      </rd:DesignerState>
+    </Query>
+    <Fields>
+      <Field Name="order_id">
+        <DataField>order_id</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="customer_id">
+        <DataField>customer_id</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="order_status">
+        <DataField>order_status</DataField>
+        <rd:TypeName>System.Byte</rd:TypeName>
+      </Field>
+      <Field Name="order_date">
+        <DataField>order_date</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="required_date">
+        <DataField>required_date</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="shipped_date">
+        <DataField>shipped_date</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="store_id">
+        <DataField>store_id</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="staff_id">
+        <DataField>staff_id</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

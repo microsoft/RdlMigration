@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<SharedDataSet xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition">
+  <DataSet Name="/Reports_test/enterdata_01">
+    <Query>
+      <DataSourceReference>/Reports_test/ENTERDATA</DataSourceReference>
+      <CommandText>&lt;Query&gt;
+  &lt;XmlData&gt;
+    &lt;Data&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;1&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;2&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;3&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;4&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;5&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;66&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;777&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;8888&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;99999&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+      &lt;Row&gt;
+        &lt;NewColumn0&gt;&lt;/NewColumn0&gt;
+      &lt;/Row&gt;
+    &lt;/Data&gt;
+  &lt;/XmlData&gt;
+  &lt;ElementPath&gt;Data{}/Row{NewColumn0(String)}&lt;/ElementPath&gt;
+&lt;/Query&gt;</CommandText>
+      <rd:DesignerState>
+        <DataGrid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="">
+          <RowNumber>12</RowNumber>
+          <ColumnNumber>1</ColumnNumber>
+          <ColumnName ColumnIndex="0" ColumnWidth="100" DataType="String">NewColumn0</ColumnName>
+          <Data ColumnIndex="0" RowIndex="0">1</Data>
+          <Data ColumnIndex="0" RowIndex="1">2</Data>
+          <Data ColumnIndex="0" RowIndex="2">3</Data>
+          <Data ColumnIndex="0" RowIndex="3">4</Data>
+          <Data ColumnIndex="0" RowIndex="4">5</Data>
+          <Data ColumnIndex="0" RowIndex="5">66</Data>
+          <Data ColumnIndex="0" RowIndex="6">777</Data>
+          <Data ColumnIndex="0" RowIndex="7">8888</Data>
+          <Data ColumnIndex="0" RowIndex="8">99999</Data>
+          <Data ColumnIndex="0" RowIndex="9" />
+          <Data ColumnIndex="0" RowIndex="10" />
+          <Data ColumnIndex="0" RowIndex="11" />
+        </DataGrid>
+      </rd:DesignerState>
+    </Query>
+    <Fields>
+      <Field Name="NewColumn0">
+        <DataField>NewColumn0</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>
