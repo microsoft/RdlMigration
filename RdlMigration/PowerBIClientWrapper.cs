@@ -43,11 +43,11 @@ namespace RdlMigration
         /// <returns> an Authentication result retrieved from the server.</returns>
         public AuthenticationResult DoInteractiveSignIn()
         {
-            AuthenticationContext authenticationContext = new AuthenticationContext(PowerBIPortalConstants.AuthorityUri, false, new TokenCache());
+            AuthenticationContext authenticationContext = new AuthenticationContext(PowerBIWrapperConstants.AuthorityUri, false, new TokenCache());
             AuthenticationResult userAuthnResult = authenticationContext.AcquireTokenAsync(
-                PowerBIPortalConstants.ResourceUrl,
+                PowerBIWrapperConstants.ResourceUrl,
                 this.ClientId,
-                new Uri(PowerBIPortalConstants.RedirectUrl),
+                new Uri(PowerBIWrapperConstants.RedirectUrl),
                 new PlatformParameters(PromptBehavior.Auto)).Result;
 
             return userAuthnResult;
@@ -111,7 +111,7 @@ namespace RdlMigration
         private void InitializeClients()
         {
             AuthenticationResult result = DoInteractiveSignIn();
-            client = new PowerBIClient(new Uri(PowerBIPortalConstants.PowerBiApiUri), new TokenCredentials(result.AccessToken));
+            client = new PowerBIClient(new Uri(PowerBIWrapperConstants.PowerBiApiUri), new TokenCredentials(result.AccessToken));
 
             importClient = new ImportsOperations(client);
             reportsClient = new ReportsOperations(client);
@@ -120,7 +120,7 @@ namespace RdlMigration
 
         private Group GetWorkspaces(string workspaceName)
         {
-            if (workspaceName == PowerBIPortalConstants.MyWorkspace)
+            if (workspaceName == PowerBIWrapperConstants.MyWorkspace)
             {
                 workspace = null;
                 var reportNames = reportsClient.GetReports().Value.Select(report => report.Name);
@@ -138,7 +138,7 @@ namespace RdlMigration
                 }
                 var reportNames = reportsClient.GetReportsInGroup(workspace.Id).Value.Select(report => report.Name);
                 workspaceReports = new HashSet<string>(reportNames);
-                return groups.First();
+                return workspace;
             }
             else if (groups.Count() == 0)
             {

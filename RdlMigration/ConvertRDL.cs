@@ -17,7 +17,7 @@ using Newtonsoft.Json.Linq;
 using RdlMigration.ReportServerApi;
 using static RdlMigration.ElementNameConstants;
 
-namespace RdlMigrationn
+namespace RdlMigration
 {
     /// <summary>
     /// The class that actually does the conversion.
