@@ -32,7 +32,7 @@ namespace RdlMigration
         public RdlFileIO(string urlEndpoint)
         {
             server = new ReportServerApi.ReportingService2010();
-            server.Url = urlEndpoint + SOAPApiExtension;
+            server.Url = urlEndpoint + SoapApiConstants.SOAPApiExtension;
             server.UseDefaultCredentials = true;
         }
 
@@ -43,7 +43,7 @@ namespace RdlMigration
         /// <returns>all the report pathes in the folder. </returns>
         public string[] GetReportsInFolder(string folderPath)
         {
-            var catagoryItems = server.ListChildren(folderPath, false).Where(item => item.TypeName == ElementNameConstants.Report);
+            var catagoryItems = server.ListChildren(folderPath, false).Where(item => item.TypeName == SoapApiConstants.Report);
             var reportPaths = from report in catagoryItems select report.Path;
             return reportPaths.ToArray();
         }
@@ -54,11 +54,11 @@ namespace RdlMigration
         /// <returns>true if it is a folder, false if it is a report. Exception if neither.</returns>
         public bool IsFolder(string itemPath)
         {
-            if (server.GetItemType(itemPath) == ElementNameConstants.Report)
+            if (server.GetItemType(itemPath) == SoapApiConstants.Report)
             {
                 return false;
             }
-            else if (server.GetItemType(itemPath) == ElementNameConstants.Folder)
+            else if (server.GetItemType(itemPath) == SoapApiConstants.Folder)
             {
                 return true;
             }

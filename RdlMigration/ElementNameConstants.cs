@@ -13,13 +13,21 @@ namespace RdlMigration
         public const string ReportFileExtension = ".rdl";
         public const string DataSetFileExtension = ".rsd";
         public const string DataSourceFileExtension = ".rds";
-        public const string SOAPApiExtension = "/ReportService2010.asmx?wsdl";
-        public const string Report = "Report";
-        public const string Folder = "Folder";
 
         public static readonly string[] SQLAzureSuffixes = { ".database.windows.net", ".database.chinacloudapi.cn", ".database.cloudapi.de", ".database.usgovcloudapi.net" };
 
-        // DataSource Constants
+        /// <summary>
+        /// Constants related to Soap API
+        /// </summary>
+        public class SoapApiConstants
+        {
+            public const string SOAPApiExtension = "/ReportService2010.asmx?wsdl";
+            public const string Report = "Report";
+            public const string Folder = "Folder";
+        }
+        /// <summary>
+        /// Constants related to Data Source
+        /// </summary>
         public class DataSourceConstants
         {
             public const string DataSources = "DataSources";
@@ -47,7 +55,9 @@ namespace RdlMigration
             public const string EnabledSpecified = "EnabledSpecified";
         }
 
-        // DataSet Constants
+        /// <summary>
+        /// Constants related to Data Set
+        /// </summary>
         public class DataSetConstants
         {
             public const string DataSets = "DataSets";
@@ -72,7 +82,10 @@ namespace RdlMigration
             public const string Filter = "Filter";
         }
 
-        public class PowerBIPortalConstants
+        /// <summary>
+        /// Constants related to Power BI Api
+        /// </summary>
+        public class PowerBIWrapperConstants
         {
             public const string MyWorkspace = "My Workspace";
             public const string ResourceUrl = "https://analysis.windows.net/powerbi/api";
