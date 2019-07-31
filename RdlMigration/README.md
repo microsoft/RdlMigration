@@ -3,13 +3,10 @@ This is a migration Tool to convert RDL with shared Data Source to ones with Emb
 
 ## Usage:
 
-In command window, run RdlMigration \<url> \<path> \<saveDirectory>(Optional), for example:
+In command window, run RdlMigration \<urlEndpoint> \<path> \<workspaceName> \<clientID>, for example:
     
-    RdlMigration http://ericpbi /Report_test/Shared/Shared_report
+    RdlMigration https://rosereports/reportserver /Rosetta/EricReports EricTestWorkspace 7ff93811-bdad-4eb8-ac81-72b442e07572
 
-OR
-
-    RdlMigration http://ericpbi /Report_test/Shared/Shared_report ./OutputFiles
 
 The default save Directory is in ./test/
 
@@ -22,11 +19,7 @@ The default save Directory is in ./test/
 
 In the solution there is a unit test project called UnitTestForRdlMigration.
 
-It reads a file  "./test.txt" (by default) and take each line as two input arguments(seperated by space) as above. It iternatively runs all lines.
+It reads files in TestFiles folder and take files as the report components and do the conversion
 
- **Only one space allowed each line otherwise a error would be thrown**
-
-Still, it would save the output file to ./test/ with all S2D_*.rdl
-
-
+ **The unit test Only check the conversion**
 
