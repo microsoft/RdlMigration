@@ -15,7 +15,7 @@ using Microsoft.PowerBI.Api.V2.Models;
 using Microsoft.Rest;
 using Newtonsoft.Json.Linq;
 using RdlMigration.ReportServerApi;
-using static RdlMigration.ElementNameConstants;
+using static RdlMigration.ElementNameConstants
 
 namespace RdlMigration
 {
