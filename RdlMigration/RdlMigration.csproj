@@ -87,7 +87,6 @@ OpenAPI spec version: 2.0
   <ItemGroup>
     <Compile Include="ConvertRDL.cs" />
     <Compile Include="ElementNameConstants.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="PowerBIClientWrapper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -96,7 +95,6 @@ OpenAPI spec version: 2.0
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="RdlFileIO.cs" />
-    <Compile Include="RdlMigrationReadParameter.cs" />
     <Compile Include="Web References\ReportServerApi\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -114,7 +112,6 @@ OpenAPI spec version: 2.0
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="stylecop.json" />
     <None Include="Web References\ReportServerApi\ActiveState.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
@@ -213,9 +210,6 @@ OpenAPI spec version: 2.0
     <None Include="Web References\ReportServerApi\Warning.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="NOTEPAD.txt" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

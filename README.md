@@ -1,14 +1,32 @@
+# RDL Migration
+This is a migration Tool to convert RDL with shared Data Source to ones with Embedded Data Sourcce
 
-# Contributing
+## Usage:
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
+In command window, run RdlMigration \<url> \<path> \<saveDirectory>(Optional), for example:
+    
+    RdlMigration http://ericpbi /Report_test/Shared/Shared_report
 
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
+OR
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+    RdlMigration http://ericpbi /Report_test/Shared/Shared_report ./OutputFiles
+
+The default save Directory is in ./test/
+
+* ### If successfully converted you will see a sucessful massage in command window and a file called **S2D_Filename.rdl** in the specificed folder/Directory
+
+* ### If error occured it will throw the error massage in the command window
+
+
+## Unit Testing:
+
+In the solution there is a unit test project called UnitTestForRdlMigration.
+
+It reads a file  "./test.txt" (by default) and take each line as two input arguments(seperated by space) as above. It iternatively runs all lines.
+
+ **Only one space allowed each line otherwise a error would be thrown**
+
+Still, it would save the output file to ./test/ with all S2D_*.rdl
+
+
+
