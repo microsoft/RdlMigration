@@ -23,17 +23,26 @@ namespace RdlMigration
         // the selected workspace. if null then means "My Workspace" is added.
         private Group workspace;
 
-        private HashSet<string> workspaceReports;
+        private HashSet<string> workspaceReports = new HashSet<string>();
 
         private PowerBIClient client;
-        private ImportsOperations importClient;
-        private ReportsOperations reportsClient;
-        private GroupsOperations groupsClient;
+        private IImportsOperations importClient;
+        private IReportsOperations reportsClient;
+        private IGroupsOperations groupsClient;
 
         public PowerBIClientWrapper(string workspaceName, string clientId)
         {
             this.ClientId = clientId;
             InitializeClients();
+            GetWorkspaces(workspaceName);
+        }
+
+        public PowerBIClientWrapper(string workspaceName, string clientId, IImportsOperations importClient, IReportsOperations reportsClient, IGroupsOperations groupsClient)
+        {
+            this.ClientId = clientId;
+            this.importClient = importClient;
+            this.reportsClient = reportsClient;
+            this.groupsClient = groupsClient;
             GetWorkspaces(workspaceName);
         }
 
@@ -51,25 +60,6 @@ namespace RdlMigration
                 new PlatformParameters(PromptBehavior.Auto)).Result;
 
             return userAuthnResult;
-        }
-
-        /// <summary>
-        /// Upload the report file stream to specific workspace under the logged in account.
-        /// </summary>
-        /// <param name="fileName">The file name displayed after uploaded to the workspace.</param>
-        /// <param name="file">the file stream itself.</param>
-        /// <param name="workspaceName">the name of the workspace that uploading the report to.</param>
-        public void UploadRDL(string fileName, Stream file, string workspaceName)
-        {
-            var workspaces = groupsClient.GetGroups().Value;
-            var groups = workspaces.Where(g => g.Name == workspaceName);
-            foreach (Group group in groups)
-            {
-                if (!reportsClient.GetReportsInGroup(group.Id).Value.Any(report => report.Name == fileName))
-                {
-                    importClient.PostImportWithFileInGroup(group.Id, file, fileName, ImportConflictHandlerMode.Abort);
-                }
-            }
         }
 
         /// <summary>
