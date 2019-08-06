@@ -5,7 +5,7 @@
   <DataSets>
     <DataSet Name="orders_CalField">
       <Query>
-        <DataSourceName>DataSource1_BikeStore</DataSourceName>
+        <DataSourceName>DataSource0_BikeStore</DataSourceName>
         <CommandText>SELECT
   sales.order_items.order_id
   ,sales.order_items.item_id

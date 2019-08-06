@@ -24,7 +24,7 @@
   <DataSets>
     <DataSet Name="DataSet1">
       <Query>
-        <DataSourceName>DataSource1_BikeStore</DataSourceName>
+        <DataSourceName>DataSource0_BikeStore</DataSourceName>
         <CommandText>SELECT
   production.brands.brand_id
   ,production.brands.brand_name
@@ -52,7 +52,7 @@ FROM
     </DataSet>
     <DataSet Name="DataSet2">
       <Query>
-        <DataSourceName>DataSource1_BikeStore</DataSourceName>
+        <DataSourceName>DataSource0_BikeStore</DataSourceName>
         <CommandText>SELECT
   sales.customers.customer_id
   ,sales.customers.first_name
@@ -122,7 +122,7 @@ FROM
     </DataSet>
     <DataSet Name="DataSet3">
       <Query>
-        <DataSourceName>DataSource1_BikeStore</DataSourceName>
+        <DataSourceName>DataSource0_BikeStore</DataSourceName>
         <CommandText>SELECT
   production.stocks.store_id
   ,production.stocks.product_id
@@ -156,7 +156,7 @@ FROM
     </DataSet>
     <DataSet Name="DataSet4">
       <Query>
-        <DataSourceName>DataSource1_BikeStore</DataSourceName>
+        <DataSourceName>DataSource0_BikeStore</DataSourceName>
         <CommandText>SELECT
   sales.orders.order_id
   ,sales.orders.customer_id
@@ -220,7 +220,7 @@ FROM
     </DataSet>
     <DataSet Name="DataSet5">
       <Query>
-        <DataSourceName>DataSource1_BikeStore</DataSourceName>
+        <DataSourceName>DataSource0_BikeStore</DataSourceName>
         <CommandText>SELECT
   sales.staffs.staff_id
   ,sales.staffs.first_name
