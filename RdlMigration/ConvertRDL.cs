@@ -47,7 +47,7 @@ namespace RdlMigration
             }
 
             var outputFileStream = File.Create(outputTxtName);
-            Console.WriteLine("Starting conversion and uploading the reports");
+            Console.WriteLine($"Starting conversion and uploading the reports {DateTime.UtcNow.ToString()}");
 
             using (TextWriter txtWriter = TextWriter.Synchronized(new StreamWriter(outputFileStream)))
             {
@@ -63,6 +63,7 @@ namespace RdlMigration
                 {
                     var reportPaths = rdlFileIO.GetReportsInFolder(inputPath);
 
+                    Console.WriteLine($"Found {reportPaths.Length} reports to convert");
                     Parallel.ForEach(reportPaths, reportPath => ConvertAndUploadReport(
                                                                                     txtWriter,
                                                                                     powerBIPortal,
@@ -99,28 +100,34 @@ namespace RdlMigration
                 {
                     string errorMessage;
                     IEnumerable<string> returnedJsonStr;
+                    string requestId = String.Empty;
+                    if (httpException?.Response?.Headers.ContainsKey("RequestId") == true)
+                    {
+                        requestId = httpException.Response.Headers["RequestId"].First();
+                    }
+
                     if (httpException.Response.Headers.TryGetValue("X-PowerBI-Error-Details", out returnedJsonStr))
                     {
                         if (returnedJsonStr.Count() != 1)
                         {
-                            message = $"FAILED TO UPLOAD : {reportName}  {httpException.Message}";  // Failed
+                            message = $"FAILED TO UPLOAD : {reportName} RequestId:{requestId} {httpException.Message}";  // Failed
                         }
                         else
                         {
                             string jsonString = returnedJsonStr.First();
                             var returnedJsonDetail = JObject.Parse(jsonString);
                             errorMessage = returnedJsonDetail["error"]["pbi.error"]["details"][2]["detail"]["value"].Value<string>();
-                            message = $"FAILED TO UPLOAD : {reportName}  {errorMessage}";  // Failed
+                            message = $"FAILED TO UPLOAD :  {reportName} RequestId:{requestId} {errorMessage}";  // Failed
                         }
                     }
                     else
                     {
-                        message = $"FAILED TO UPLOAD : {reportName}  {httpException.Message}";  // Failed
+                        message = $"FAILED TO UPLOAD : {reportName} RequestId:{requestId} {httpException.Message}";  // Failed
                     }
                 }
                 catch (Exception e)
                 {
-                    message = $"FAILED : {reportName}  {e.Message}";  // Failed
+                    message = $"FAILED : {reportName} {e.Message}";  // Failed
                 }
             }
             Console.WriteLine(message);

@@ -24,7 +24,7 @@
   <DataSets>
     <DataSet Name="sharedSet">
       <Query>
-        <DataSourceName>DataSource1_BikeStore</DataSourceName>
+        <DataSourceName>DataSource0_BikeStore</DataSourceName>
         <CommandText>SELECT
   sales.staffs.staff_id
   ,sales.staffs.first_name

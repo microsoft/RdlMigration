@@ -5,7 +5,7 @@
   <DataSets>
     <DataSet Name="DataSet1">
       <Query>
-        <DataSourceName>DataSource1_BikeStore</DataSourceName>
+        <DataSourceName>DataSource0_BikeStore</DataSourceName>
         <CommandText>SELECT
   sales.orders.order_id
   ,sales.orders.customer_id
@@ -69,7 +69,7 @@ FROM
     </DataSet>
     <DataSet Name="DataSet2">
       <Query>
-        <DataSourceName>DataSource1_BikeStore</DataSourceName>
+        <DataSourceName>DataSource0_BikeStore</DataSourceName>
         <CommandText>SELECT
   sales.orders.order_id
   ,sales.orders.customer_id
@@ -133,7 +133,7 @@ FROM
     </DataSet>
     <DataSet Name="DataSet3">
       <Query>
-        <DataSourceName>DataSource1_BikeStore</DataSourceName>
+        <DataSourceName>DataSource0_BikeStore</DataSourceName>
         <CommandText>SELECT
   sales.orders.order_id
   ,sales.orders.customer_id

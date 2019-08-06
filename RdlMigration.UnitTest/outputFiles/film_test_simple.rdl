@@ -5,7 +5,7 @@
   <DataSets>
     <DataSet Name="DataSet1">
       <Query>
-        <DataSourceName>DataSource2_Movies</DataSourceName>
+        <DataSourceName>DataSource1_Movies</DataSourceName>
         <CommandText>SELECT
   Film.FilmID
   ,Film.Title
