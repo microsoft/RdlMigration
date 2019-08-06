@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Microsoft.PowerBI.Api.V2;
-using Microsoft.PowerBI.Api.V2.Models;
-using Microsoft.Rest;
+﻿// Copyright (c) 2019 Microsoft Corporation. All Rights Reserved.
+// Licensed under the MIT License (MIT)
 
-using static RdlMigration.ElementNameConstants;
+using System;
+using System.Linq;
 
 namespace RdlMigration
 {

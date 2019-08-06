@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) 2019 Microsoft Corporation. All Rights Reserved.
+// Licensed under the MIT License (MIT)
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

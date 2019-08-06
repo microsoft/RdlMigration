@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) 2019 Microsoft Corporation. All Rights Reserved.
+// Licensed under the MIT License (MIT)
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -111,7 +114,6 @@ namespace RdlMigration.UnitTest
                     It.IsAny<Dictionary<string, List<string>>>(),
                     It.IsAny<CancellationToken>()) == groupOperationResult
                     );
-
 
             return new PowerBIClientWrapper(workspaceName, String.Empty, importClientOutput, reportClientOutput, groupsClientOutput);
         }

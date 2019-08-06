@@ -1,12 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
+﻿// Copyright (c) 2019 Microsoft Corporation. All Rights Reserved.
+// Licensed under the MIT License (MIT)
+
 using System.IO;
-using System.Xml;
 using System.Xml.Linq;
-using RdlMigration;
-using RdlMigration.ReportServerApi;
 using System.Xml.Schema;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace RdlMigration.UnitTest
 {
