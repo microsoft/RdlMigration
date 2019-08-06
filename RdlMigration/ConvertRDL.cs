@@ -1,17 +1,13 @@
-﻿using System;
+﻿// Copyright (c) 2019 Microsoft Corporation. All Rights Reserved.
+// Licensed under the MIT License (MIT)
+
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.Linq;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Microsoft.PowerBI.Api.V2;
-using Microsoft.PowerBI.Api.V2.Models;
 using Microsoft.Rest;
 using Newtonsoft.Json.Linq;
 using RdlMigration.ReportServerApi;
