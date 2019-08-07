@@ -78,16 +78,7 @@ namespace RdlMigration
         {
             var reportName = Path.GetFileName(reportPath);
             var report = rdlFileIO.DownloadRdl(reportPath);
-            var logStream = new MemoryStream();
-            report.CopyTo(logStream);
-            report.Seek(0, SeekOrigin.Begin);
-            logStream.Seek(0, SeekOrigin.Begin);
-
-            using (var sr = new StreamReader(logStream))
-            {
-                var rdl = sr.ReadToEnd();
-                File.WriteAllText($"output\\{reportName}_original.rdl", rdl);
-            }
+            SaveAndCopyStream(report, $"output\\{reportName}_original.rdl");  
 
             string message = "";
             if (powerBIClient.ExistReport(reportName))
@@ -102,19 +93,7 @@ namespace RdlMigration
                     DataSource[] dataSources = rdlFileIO.GetDataSources(reportPath);
 
                     var convertedFile = ConvertFile(report, dataSources, referenceDataSetMap);
-
-                    var convertedLogStream = new MemoryStream();
-                    convertedFile.CopyTo(convertedLogStream);
-                    convertedFile.Seek(0, SeekOrigin.Begin);
-                    convertedLogStream.Seek(0, SeekOrigin.Begin);
-
-                    using (var sr = new StreamReader(convertedLogStream))
-                    {
-                        var rdl = sr.ReadToEnd();
-
-                        File.WriteAllText($"output\\{reportName}_convert.rdl", rdl);
-                    }
-                    convertedFile.Seek(0, SeekOrigin.Begin);
+                    SaveAndCopyStream(convertedFile, $"output\\{reportName}_convert.rdl");
 
                     powerBIClient.UploadRDL(reportName + ReportFileExtension, convertedFile);
 
@@ -155,6 +134,22 @@ namespace RdlMigration
             }
             Console.WriteLine(message);
             txtWriter.WriteLine(message);
+        }
+
+        private void SaveAndCopyStream(Stream stream, string filePath)
+        {
+            using (var logStream = new MemoryStream())
+            {
+                stream.CopyTo(logStream);
+                stream.Seek(0, SeekOrigin.Begin);
+                logStream.Seek(0, SeekOrigin.Begin);
+
+                using (var sr = new StreamReader(logStream))
+                {
+                    var rdl = sr.ReadToEnd();
+                    File.WriteAllText(filePath, rdl);
+                }
+            }
         }
 
         /// <summary>

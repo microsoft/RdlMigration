@@ -99,6 +99,7 @@ OpenAPI spec version: 2.0
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="RdlFileIO.cs" />
+    <Compile Include="Web References\ReportServerApi\IReportingService2010.cs" />
     <Compile Include="Web References\ReportServerApi\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

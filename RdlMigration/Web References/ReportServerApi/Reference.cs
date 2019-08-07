@@ -31,7 +31,8 @@ namespace RdlMigration.ReportServerApi {
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(RecurrencePattern))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ScheduleDefinitionOrReference))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(DataSourceDefinitionOrReference))]
-    public partial class ReportingService2010 : System.Web.Services.Protocols.SoapHttpClientProtocol {
+    public partial class ReportingService2010 : System.Web.Services.Protocols.SoapHttpClientProtocol, IReportingService2010
+    {
         
         private TrustedUserHeader trustedUserHeaderValueField;
         
@@ -298,7 +299,11 @@ namespace RdlMigration.ReportServerApi {
                 this.useDefaultCredentialsSetExplicitly = true;
             }
         }
-        
+
+        public ReportingService2010(bool forTest)
+        {
+        }
+
         public TrustedUserHeader TrustedUserHeaderValue {
             get {
                 return this.trustedUserHeaderValueField;

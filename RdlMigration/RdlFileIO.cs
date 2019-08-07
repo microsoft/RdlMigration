@@ -21,7 +21,7 @@ namespace RdlMigration
     public class RdlFileIO
     {
         private static ConcurrentDictionary<string, string> dataSourceReferenceNameMap;
-        private readonly ReportingService2010 server;
+        private readonly IReportingService2010 server;
 
         static RdlFileIO()
         {
@@ -35,6 +35,11 @@ namespace RdlMigration
                 Url = urlEndpoint + SoapApiConstants.SOAPApiExtension,
                 UseDefaultCredentials = true
             };
+        }
+
+        public RdlFileIO(IReportingService2010 reportserver)
+        {
+            server = reportserver;
         }
 
         /// <summary>
