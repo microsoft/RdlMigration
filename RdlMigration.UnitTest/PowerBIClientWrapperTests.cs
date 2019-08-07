@@ -61,9 +61,11 @@ namespace RdlMigration.UnitTest
         private PowerBIClientWrapper CreateMockOperations(string workspaceName)
         {
             var importOperationResult = System.Threading.Tasks.Task.FromResult(new HttpOperationResponse<Import>());
-            var groupList = new List<Group>();
-            groupList.Add(new Group(new Guid(), "testWorkspace"));
-            groupList.Add(new Group(new Guid(), "NonPremiumWorkspace", isOnDedicatedCapacity: false));
+            var groupList = new List<Group>
+            {
+                new Group(new Guid(), "testWorkspace"),
+                new Group(new Guid(), "NonPremiumWorkspace", isOnDedicatedCapacity: false)
+            };
             var groupOperationResult = System.Threading.Tasks.Task.FromResult(new HttpOperationResponse<Groups>()
             {
                 Body = new Groups()
