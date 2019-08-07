@@ -75,7 +75,7 @@ namespace RdlMigration.UnitTest
 
             Assert.AreEqual(2, references.Count);
             Assert.AreEqual("DataSource1", references[0].Name);
-            Assert.AreEqual("DataSource0_ds2", references[1].Name);
+            Assert.IsTrue(references[1].Name.Contains("ds2"));
         }
     }
 }

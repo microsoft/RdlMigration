@@ -26,7 +26,7 @@ namespace RdlMigration.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost/ReportServer/ReportService2010.asmx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://ericpbi:80/ReportServer/ReportService2010.asmx")]
         public string RdlMigration_ReportingService2010 {
             get {
                 return ((string)(this["RdlMigration_ReportingService2010"]));
