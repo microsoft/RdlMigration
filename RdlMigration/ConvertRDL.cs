@@ -30,60 +30,47 @@ namespace RdlMigration
         /// <param name="clientID">The clientID of the App registered with permissions of Reading/Writing dataset, report and Reading Workspaces.</param>
         public void ConvertFolder(string urlEndPoint, string inputPath, string workspaceName, string clientID)
         {
-            Console.WriteLine("Starting the log-in window");
+            Trace("Starting the log-in window");
             PowerBIClientWrapper powerBIPortal = new PowerBIClientWrapper(workspaceName, clientID);
-            Console.WriteLine("Log-in successfully, retrieving the reports...");
+            Trace("Log-in successfully, retrieving the reports...");
 
             RdlFileIO rdlFileIO = new RdlFileIO(urlEndPoint);
 
-            string outputTxtName = ConversionLogFileName;
-            if (File.Exists(outputTxtName))
-            {
-                File.Delete(outputTxtName);
-            }
-
-            var outputFileStream = File.Create(outputTxtName);
-            Console.WriteLine($"Starting conversion and uploading the reports {DateTime.UtcNow.ToString()}");
+            Trace($"Starting conversion and uploading the reports {DateTime.UtcNow.ToString()}");
 
             if (!Directory.Exists("output"))
             {
                 Directory.CreateDirectory("output");
             }
 
-            using (TextWriter txtWriter = TextWriter.Synchronized(new StreamWriter(outputFileStream)))
+            if (!rdlFileIO.IsFolder(inputPath))
             {
-                if (!rdlFileIO.IsFolder(inputPath))
-                {
-                    ConvertAndUploadReport(
-                                            txtWriter,
-                                            powerBIPortal,
-                                            rdlFileIO,
-                                            inputPath);
-                }
-                else
-                {
-                    var reportPaths = rdlFileIO.GetReportsInFolder(inputPath);
+                ConvertAndUploadReport(
+                                        powerBIPortal,
+                                        rdlFileIO,
+                                        inputPath);
+            }
+            else
+            {
+                var reportPaths = rdlFileIO.GetReportsInFolder(inputPath);
 
-                    Console.WriteLine($"Found {reportPaths.Length} reports to convert");
-                    Parallel.ForEach(reportPaths, reportPath => ConvertAndUploadReport(
-                                                                                    txtWriter,
-                                                                                    powerBIPortal,
-                                                                                    rdlFileIO,
-                                                                                    reportPath));
-                }
+                Console.WriteLine($"Found {reportPaths.Length} reports to convert");
+                Parallel.ForEach(reportPaths, reportPath => ConvertAndUploadReport(
+                                                                                powerBIPortal,
+                                                                                rdlFileIO,
+                                                                                reportPath));
             }
         }
 
-        private void ConvertAndUploadReport(TextWriter txtWriter, PowerBIClientWrapper powerBIClient, RdlFileIO rdlFileIO, string reportPath)
+        private void ConvertAndUploadReport(PowerBIClientWrapper powerBIClient, RdlFileIO rdlFileIO, string reportPath)
         {
             var reportName = Path.GetFileName(reportPath);
             var report = rdlFileIO.DownloadRdl(reportPath);
-            SaveAndCopyStream(report, $"output\\{reportName}_original.rdl");  
+            SaveAndCopyStream(reportName, report, $"output\\{reportName}_original.rdl");  
 
-            string message = "";
             if (powerBIClient.ExistReport(reportName))
             {
-                message = $"CONFLICT : {reportName}  A report with same name already exist on Specific workspace";   // Write Conflict
+                Trace($"CONFLICT : {reportName}  A report with same name already exist on Specific workspace");
             }
             else
             {
@@ -93,11 +80,11 @@ namespace RdlMigration
                     DataSource[] dataSources = rdlFileIO.GetDataSources(reportPath);
 
                     var convertedFile = ConvertFile(report, dataSources, referenceDataSetMap);
-                    SaveAndCopyStream(convertedFile, $"output\\{reportName}_convert.rdl");
+                    SaveAndCopyStream(reportName, convertedFile, $"output\\{reportName}_convert.rdl");
 
                     powerBIClient.UploadRDL(reportName + ReportFileExtension, convertedFile);
 
-                    message = $"SUCCESS : {reportName}  The file is successfully uploaded"; // success
+                    Trace($"SUCCESS : {reportName}  The file is successfully uploaded");
                 }
                 catch (HttpOperationException httpException)
                 {
@@ -112,31 +99,29 @@ namespace RdlMigration
                     {
                         if (returnedJsonStr.Count() != 1)
                         {
-                            message = $"FAILED TO UPLOAD : {reportName} RequestId:{requestId} {httpException.Message}";  // Failed
+                            Trace($"FAILED TO UPLOAD : {reportName} RequestId:{requestId} {httpException.Message}");
                         }
                         else
                         {
                             string jsonString = returnedJsonStr.First();
                             var returnedJsonDetail = JObject.Parse(jsonString);
                             errorMessage = returnedJsonDetail["error"]["pbi.error"]["details"][2]["detail"]["value"].Value<string>();
-                            message = $"FAILED TO UPLOAD :  {reportName} RequestId:{requestId} {errorMessage}";  // Failed
+                            Trace($"FAILED TO UPLOAD :  {reportName} RequestId:{requestId} {errorMessage}");
                         }
                     }
                     else
                     {
-                        message = $"FAILED TO UPLOAD : {reportName} RequestId:{requestId} {httpException.Message}";  // Failed
+                        Trace($"FAILED TO UPLOAD : {reportName} RequestId:{requestId} {httpException.Message}");
                     }
                 }
                 catch (Exception e)
                 {
-                    message = $"FAILED : {reportName} {e.Message}";  // Failed
+                    Trace($"FAILED : {reportName} {e.Message}");
                 }
             }
-            Console.WriteLine(message);
-            txtWriter.WriteLine(message);
         }
 
-        private void SaveAndCopyStream(Stream stream, string filePath)
+        private void SaveAndCopyStream(string reportName, Stream stream, string filePath)
         {
             using (var logStream = new MemoryStream())
             {
@@ -147,7 +132,14 @@ namespace RdlMigration
                 using (var sr = new StreamReader(logStream))
                 {
                     var rdl = sr.ReadToEnd();
-                    File.WriteAllText(filePath, rdl);
+                    try
+                    {
+                        File.WriteAllText(filePath, rdl);
+                    }
+                    catch (Exception e)
+                    {
+                        Trace($"FAILED : {reportName} {e.Message}");
+                    }
                 }
             }
         }
@@ -623,6 +615,20 @@ namespace RdlMigration
         {
             newElement.Name = originalElement.Name.Namespace + newElement.Name.LocalName;
             originalElement.ReplaceWith(newElement);
+        }
+
+        private void Trace(string message)
+        {
+            try
+            {
+                Console.WriteLine(message);
+                File.AppendAllText(ConversionLogFileName, message);
+                File.AppendAllText(ConversionLogFileName, Environment.NewLine);
+            }
+            catch (IOException)
+            {
+                // ignore failure to trace
+            }
         }
     }
 }
