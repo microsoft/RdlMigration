@@ -7097,10 +7097,10 @@
   <wsdl:service name="ReportingService2010">
     <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">The Reporting Services Web Service enables you to manage a report server and its contents including server settings, security, reports, subscriptions, and data sources.</wsdl:documentation>
     <wsdl:port name="ReportingService2010Soap" binding="tns:ReportingService2010Soap">
-      <soap:address location="http://ericpbi:80/ReportServer/ReportService2010.asmx" />
+      <soap:address location="http://localhost:80/ReportServer/ReportService2010.asmx" />
     </wsdl:port>
     <wsdl:port name="ReportingService2010Soap12" binding="tns:ReportingService2010Soap12">
-      <soap12:address location="http://ericpbi:80/ReportServer/ReportService2010.asmx" />
+      <soap12:address location="http://localhost:80/ReportServer/ReportService2010.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

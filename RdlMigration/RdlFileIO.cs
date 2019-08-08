@@ -21,7 +21,7 @@ namespace RdlMigration
     public class RdlFileIO
     {
         private static ConcurrentDictionary<string, string> dataSourceReferenceNameMap;
-        private readonly ReportingService2010 server;
+        private readonly IReportingService2010 server;
 
         static RdlFileIO()
         {
@@ -30,9 +30,16 @@ namespace RdlMigration
 
         public RdlFileIO(string urlEndpoint)
         {
-            server = new ReportServerApi.ReportingService2010();
-            server.Url = urlEndpoint + SoapApiConstants.SOAPApiExtension;
-            server.UseDefaultCredentials = true;
+            server = new ReportServerApi.ReportingService2010
+            {
+                Url = urlEndpoint + SoapApiConstants.SOAPApiExtension,
+                UseDefaultCredentials = true
+            };
+        }
+
+        public RdlFileIO(IReportingService2010 reportserver)
+        {
+            server = reportserver;
         }
 
         /// <summary>
@@ -158,8 +165,7 @@ namespace RdlMigration
 
         public XElement[] GetDataSets(string filePath)
         {
-            Dictionary<string, XElement> retDict;
-            return GetDataSets(filePath, out retDict);
+            return GetDataSets(filePath, out Dictionary<string, XElement> retDict);
         }
 
         /// <summary>
@@ -167,23 +173,27 @@ namespace RdlMigration
         /// </summary>
         /// <param name="filePath">The remote path of the report file on server.</param>
         /// <returns>an List of dataSource Reference.</returns>
-        public List<string> GetDataSourceReference(string filePath)
+        public List<ItemReferenceData> GetDataSourceReference(string filePath)
         {
-            List<string> retList = new List<string>();
+            var retList = new List<ItemReferenceData>();
             foreach (var reference in server.GetItemReferences(filePath, DataSourceConstants.DataSource))
             {
                 if (reference.Reference == null)
                 {
                     throw new Exception($"Bad report: cannot find data source {reference.Name}.");
                 }
-                retList.Add(reference.Reference);
+                retList.Add(reference);
             }
 
             foreach (var dataSet in server.GetItemReferences(filePath, DataSetConstants.DataSet))
             {
-                var dataSetSourceRef = server.GetItemReferences(dataSet.Reference, DataSourceConstants.DataSource).ElementAt(0).Reference;
+                var dataSetSourceRef = server.GetItemReferences(dataSet.Reference, DataSourceConstants.DataSource).ElementAt(0);
                 if (!retList.Contains(dataSetSourceRef))
                 {
+                    // rewrite name of datasources referenced from datasets
+                    string dataSourceName = SerializeDataSourceName(dataSetSourceRef.Reference);
+                    dataSetSourceRef.Name = dataSourceName;
+
                     retList.Add(dataSetSourceRef);
                 }
             }
@@ -198,15 +208,16 @@ namespace RdlMigration
         /// <returns>an array of DataSource Object.</returns>
         public DataSource[] GetDataSources(string filePath)
         {
-            List<string> references = GetDataSourceReference(filePath);
+            List<ItemReferenceData> references = GetDataSourceReference(filePath);
             List<DataSource> retList = new List<DataSource>();
-            foreach (string reference in references)
+            foreach (var reference in references)
             {
-                DataSource currDataSource = new DataSource();
-                currDataSource.Item = server.GetDataSourceContents(reference);
-                string dataSourceName = SerializeDataSourceName(reference);
+                DataSource currDataSource = new DataSource
+                {
+                    Item = server.GetDataSourceContents(reference.Reference),
+                    Name = reference.Name
+                };
 
-                currDataSource.Name = dataSourceName;
                 retList.Add(currDataSource);
             }
 
@@ -314,16 +325,15 @@ namespace RdlMigration
         /// <returns>corresponding dataSource Name.</returns>
         public static string SerializeDataSourceName(string path)
         {
-            string dataSourceName;
 
-            if (!dataSourceReferenceNameMap.TryGetValue(path, out dataSourceName))
+            if (!dataSourceReferenceNameMap.TryGetValue(path, out string dataSourceName))
             {
                 string remoteDataSourceName = path.Split('/').Last();
                 remoteDataSourceName = new string(remoteDataSourceName.Where(x => char.IsLetterOrDigit(x) || x == '_').ToArray());
                 dataSourceName = DataSourceConstants.DataSource + dataSourceReferenceNameMap.Count() + '_' + remoteDataSourceName;
                 dataSourceReferenceNameMap.TryAdd(path, dataSourceName);
             }
-            
+
             return dataSourceName;
         }
 

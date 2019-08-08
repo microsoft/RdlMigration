@@ -9,8 +9,6 @@ This is a Tool that takes files from the report server and convert the shared co
 It will save all the converted files to local disk and display the status of each file
 The status would be displayed in the command window as well as a file called *ConversionLog.txt* 
 
-**NOTE:** it will **NOT** take the correpond datasource or dataset down and thus will **NOT** push any datasource or dataset to PBI Workspace.
-
 ---
 ## Input details:
 

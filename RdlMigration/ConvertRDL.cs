@@ -30,104 +30,118 @@ namespace RdlMigration
         /// <param name="clientID">The clientID of the App registered with permissions of Reading/Writing dataset, report and Reading Workspaces.</param>
         public void ConvertFolder(string urlEndPoint, string inputPath, string workspaceName, string clientID)
         {
-            Console.WriteLine("Starting the log-in window");
+            Trace("Starting the log-in window");
             PowerBIClientWrapper powerBIPortal = new PowerBIClientWrapper(workspaceName, clientID);
-            Console.WriteLine("Log-in successfully, retrieving the reports...");
+            Trace("Log-in successfully, retrieving the reports...");
 
             RdlFileIO rdlFileIO = new RdlFileIO(urlEndPoint);
 
-            string outputTxtName = ConversionLogFileName;
-            if (File.Exists(outputTxtName))
+            Trace($"Starting conversion and uploading the reports {DateTime.UtcNow.ToString()}");
+
+            if (!Directory.Exists("output"))
             {
-                File.Delete(outputTxtName);
+                Directory.CreateDirectory("output");
             }
 
-            var outputFileStream = File.Create(outputTxtName);
-            Console.WriteLine($"Starting conversion and uploading the reports {DateTime.UtcNow.ToString()}");
-
-            using (TextWriter txtWriter = TextWriter.Synchronized(new StreamWriter(outputFileStream)))
+            if (!rdlFileIO.IsFolder(inputPath))
             {
-                if (!rdlFileIO.IsFolder(inputPath))
-                {
-                    ConvertAndUploadReport(
-                                            txtWriter,
-                                            powerBIPortal,
-                                            rdlFileIO,
-                                            inputPath);
-                }
-                else
-                {
-                    var reportPaths = rdlFileIO.GetReportsInFolder(inputPath);
+                ConvertAndUploadReport(
+                                        powerBIPortal,
+                                        rdlFileIO,
+                                        inputPath);
+            }
+            else
+            {
+                var reportPaths = rdlFileIO.GetReportsInFolder(inputPath);
 
-                    Console.WriteLine($"Found {reportPaths.Length} reports to convert");
-                    Parallel.ForEach(reportPaths, reportPath => ConvertAndUploadReport(
-                                                                                    txtWriter,
-                                                                                    powerBIPortal,
-                                                                                    rdlFileIO,
-                                                                                    reportPath));
-                }
+                Console.WriteLine($"Found {reportPaths.Length} reports to convert");
+                Parallel.ForEach(reportPaths, reportPath => ConvertAndUploadReport(
+                                                                                powerBIPortal,
+                                                                                rdlFileIO,
+                                                                                reportPath));
             }
         }
 
-        private void ConvertAndUploadReport(TextWriter txtWriter, PowerBIClientWrapper powerBIClient, RdlFileIO rdlFileIO, string reportPath)
+        private void ConvertAndUploadReport(PowerBIClientWrapper powerBIClient, RdlFileIO rdlFileIO, string reportPath)
         {
-            Dictionary<string, XElement> referenceDataSetMap;
-
             var reportName = Path.GetFileName(reportPath);
             var report = rdlFileIO.DownloadRdl(reportPath);
+            SaveAndCopyStream(reportName, report, $"output\\{reportName}_original.rdl");  
 
-            string message = "";
             if (powerBIClient.ExistReport(reportName))
             {
-                message = $"CONFLICT : {reportName}  A report with same name already exist on Specific workspace";   // Write Conflict
+                Trace($"CONFLICT : {reportName}  A report with same name already exist on Specific workspace");
             }
             else
             {
                 try
                 {
-                    XElement[] dataSets = rdlFileIO.GetDataSets(reportPath, out referenceDataSetMap);
+                    XElement[] dataSets = rdlFileIO.GetDataSets(reportPath, out Dictionary<string, XElement> referenceDataSetMap);
                     DataSource[] dataSources = rdlFileIO.GetDataSources(reportPath);
 
-                    powerBIClient.UploadRDL(reportName + ReportFileExtension, ConvertFile(report, dataSources, referenceDataSetMap));
+                    var convertedFile = ConvertFile(report, dataSources, referenceDataSetMap);
+                    SaveAndCopyStream(reportName, convertedFile, $"output\\{reportName}_convert.rdl");
 
-                    message = $"SUCCESS : {reportName}  The file is successfully uploaded"; // success
+                    powerBIClient.UploadRDL(reportName + ReportFileExtension, convertedFile);
+
+                    Trace($"SUCCESS : {reportName}  The file is successfully uploaded");
                 }
                 catch (HttpOperationException httpException)
                 {
                     string errorMessage;
-                    IEnumerable<string> returnedJsonStr;
                     string requestId = String.Empty;
                     if (httpException?.Response?.Headers.ContainsKey("RequestId") == true)
                     {
                         requestId = httpException.Response.Headers["RequestId"].First();
                     }
 
-                    if (httpException.Response.Headers.TryGetValue("X-PowerBI-Error-Details", out returnedJsonStr))
+                    if (httpException.Response.Headers.TryGetValue("X-PowerBI-Error-Details", out IEnumerable<string> returnedJsonStr))
                     {
                         if (returnedJsonStr.Count() != 1)
                         {
-                            message = $"FAILED TO UPLOAD : {reportName} RequestId:{requestId} {httpException.Message}";  // Failed
+                            Trace($"FAILED TO UPLOAD : {reportName} RequestId:{requestId} {httpException.Message}");
                         }
                         else
                         {
                             string jsonString = returnedJsonStr.First();
                             var returnedJsonDetail = JObject.Parse(jsonString);
                             errorMessage = returnedJsonDetail["error"]["pbi.error"]["details"][2]["detail"]["value"].Value<string>();
-                            message = $"FAILED TO UPLOAD :  {reportName} RequestId:{requestId} {errorMessage}";  // Failed
+                            Trace($"FAILED TO UPLOAD :  {reportName} RequestId:{requestId} {errorMessage}");
                         }
                     }
                     else
                     {
-                        message = $"FAILED TO UPLOAD : {reportName} RequestId:{requestId} {httpException.Message}";  // Failed
+                        Trace($"FAILED TO UPLOAD : {reportName} RequestId:{requestId} {httpException.Message}");
                     }
                 }
                 catch (Exception e)
                 {
-                    message = $"FAILED : {reportName} {e.Message}";  // Failed
+                    Trace($"FAILED : {reportName} {e.Message}");
                 }
             }
-            Console.WriteLine(message);
-            txtWriter.WriteLine(message);
+        }
+
+        private void SaveAndCopyStream(string reportName, Stream stream, string filePath)
+        {
+            using (var logStream = new MemoryStream())
+            {
+                stream.CopyTo(logStream);
+                stream.Seek(0, SeekOrigin.Begin);
+                logStream.Seek(0, SeekOrigin.Begin);
+
+                using (var sr = new StreamReader(logStream))
+                {
+                    var rdl = sr.ReadToEnd();
+                    try
+                    {
+                        File.WriteAllText(filePath, rdl);
+                    }
+                    catch (Exception e)
+                    {
+                        Trace($"FAILED : {reportName} {e.Message}");
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -150,8 +164,7 @@ namespace RdlMigration
 
             var rdlFilePath = rdlFileIO.DownloadRdl(inputReportPath, downloadPath);
 
-            Dictionary<string, XElement> referenceDataSetMap;
-            XElement[] dataSets = rdlFileIO.GetDataSets(inputReportPath, out referenceDataSetMap);
+            XElement[] dataSets = rdlFileIO.GetDataSets(inputReportPath, out Dictionary<string, XElement> referenceDataSetMap);
             DataSource[] dataSources = rdlFileIO.GetDataSources(inputReportPath);
 
             var dataSourceFilePath = Path.Combine(downloadPath, reportName + DataSourceFileExtension);
@@ -260,9 +273,8 @@ namespace RdlMigration
                     var sharedDataSetReferenceName = dataSetElement.Name.Namespace + DataSetConstants.SharedDataSetReference;
                     if (dataSetElement.Descendants(sharedDataSetReferenceName).Count() == 1)
                     {
-                        XElement currDataSetNode;
                         string dataSetName = dataSetElement.Descendants(sharedDataSetReferenceName).First().Value;
-                        if (dataSetMaps.TryGetValue(dataSetName, out currDataSetNode))
+                        if (dataSetMaps.TryGetValue(dataSetName, out XElement currDataSetNode))
                         {
                             currDataSetNode = new XElement(currDataSetNode);    // change passing by reference to by value, thus modification would not effect original dataSet
                             ChangeNameSpaceHelper(currNamespace, currDataSetNode);
@@ -309,17 +321,19 @@ namespace RdlMigration
             int i = 0;
             foreach (XElement childNode in dataSources)
             {
-                DataSource temp = new DataSource();
-                temp.Name = childNode.Attribute("Name").Value;
-                DataSourceDefinition currDataSourceDefinition = new DataSourceDefinition();
+                DataSource temp = new DataSource
+                {
+                    Name = childNode.Attribute("Name").Value
+                };
+                DataSourceDefinition currDataSourceDefinition = new DataSourceDefinition
+                {
+                    Extension = childNode.Element(DataSourceConstants.Extension).Value,
+                    ConnectString = childNode.Element(DataSourceConstants.ConnectString).Value,
+                    UseOriginalConnectString = childNode.Element(DataSourceConstants.UseOriginalConnectString).Value == "True",
+                    OriginalConnectStringExpressionBased = childNode.Element(DataSourceConstants.OriginalConnectStringExpressionBased).Value == "True"
+                };
 
-                currDataSourceDefinition.Extension = childNode.Element(DataSourceConstants.Extension).Value;
-                currDataSourceDefinition.ConnectString = childNode.Element(DataSourceConstants.ConnectString).Value;
-                currDataSourceDefinition.UseOriginalConnectString = childNode.Element(DataSourceConstants.UseOriginalConnectString).Value == "True";
-                currDataSourceDefinition.OriginalConnectStringExpressionBased = childNode.Element(DataSourceConstants.OriginalConnectStringExpressionBased).Value == "True";
-
-                CredentialRetrievalEnum credentialRetrieval;
-                Enum.TryParse(childNode.Element(DataSourceConstants.CredentialRetrieval).Value, true, out credentialRetrieval);
+                Enum.TryParse(childNode.Element(DataSourceConstants.CredentialRetrieval).Value, true, out CredentialRetrievalEnum credentialRetrieval);
                 currDataSourceDefinition.CredentialRetrieval = credentialRetrieval;
 
                 currDataSourceDefinition.Enabled = childNode.Element(DataSourceConstants.Enabled).Value == "True";
@@ -378,8 +392,7 @@ namespace RdlMigration
                 {
                     var reportDataFieldNode = reportField.Descendants(reportField.Name.Namespace + DataSetConstants.DataField).First();
                     string dataSetFieldName = reportDataFieldNode.Value;
-                    XElement currDataSetField;
-                    if (dataSetFieldDict.TryGetValue(dataSetFieldName, out currDataSetField))
+                    if (dataSetFieldDict.TryGetValue(dataSetFieldName, out XElement currDataSetField))
                     {
                         var dataSetFieldValueNode = currDataSetField.Descendants(currDataSetField.Name.Namespace + "Value");
                         var dataSetDataFieldNode = currDataSetField.Descendants(currDataSetField.Name.Namespace + DataSetConstants.DataField);
@@ -425,9 +438,8 @@ namespace RdlMigration
                 var datasetParameters = dataSetParamEnum.First();
                 foreach (var datasetParam in datasetParameters.Elements())
                 {
-                    XElement output;
                     var parameterName = datasetParam.Attribute("Name").Value;
-                    if (!parameterMap.TryGetValue(parameterName, out output))
+                    if (!parameterMap.TryGetValue(parameterName, out XElement output))
                     {
                         var defaultValue = datasetParam.Element(currNamespace + "DefaultValue");
                         queryParameters.Add(CreateNewQueryParameter(currNamespace, parameterName, defaultValue == null ? "" : defaultValue.Value));
@@ -550,8 +562,10 @@ namespace RdlMigration
 
         private bool IsSQLAzure(string connectString)
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder.ConnectionString = connectString;
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder
+            {
+                ConnectionString = connectString
+            };
             string source = builder.DataSource;
 
             return SQLAzureSuffixes.Any(sqlAzureSuffix => source.EndsWith(sqlAzureSuffix, StringComparison.CurrentCultureIgnoreCase));
@@ -579,8 +593,10 @@ namespace RdlMigration
         private XElement CreateNode(XDocument root, string elementName, string innerText)
         {
             XNamespace xmlNameSpace = root.Root.Attribute("xmlns").Value;
-            XElement retNode = new XElement(xmlNameSpace + elementName);
-            retNode.Value = innerText;
+            XElement retNode = new XElement(xmlNameSpace + elementName)
+            {
+                Value = innerText
+            };
             return retNode;
         }
 
@@ -588,8 +604,10 @@ namespace RdlMigration
         private XElement CreateNode_rd(XDocument root, string elementName, string innerText)
         {
             XNamespace reportDesignerNameSpace = ReportDesignerNameSpace;
-            XElement retNode = new XElement(reportDesignerNameSpace + elementName);
-            retNode.Value = innerText;
+            XElement retNode = new XElement(reportDesignerNameSpace + elementName)
+            {
+                Value = innerText
+            };
             return retNode;
         }
 
@@ -597,6 +615,20 @@ namespace RdlMigration
         {
             newElement.Name = originalElement.Name.Namespace + newElement.Name.LocalName;
             originalElement.ReplaceWith(newElement);
+        }
+
+        private void Trace(string message)
+        {
+            try
+            {
+                Console.WriteLine(message);
+                File.AppendAllText(ConversionLogFileName, message);
+                File.AppendAllText(ConversionLogFileName, Environment.NewLine);
+            }
+            catch (IOException)
+            {
+                // ignore failure to trace
+            }
         }
     }
 }
