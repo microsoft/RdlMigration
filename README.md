@@ -3,8 +3,11 @@
 This tool is designed to help customers migrate SQL Server Reporting Services reports (RDL) from their local server(s) to a Power BI workspace in their tenant.  As part of the migration process, the tool will also:
 
 •	Convert any shared datasources in these report files to be embedded in the report and save the files locally to disk.
+
 •	Check for unsupported datasources or report components when uploading to Power BI
+
 •	Save the converted files that pass these checks to a specified Power BI Workspace.
+
 •	Provide a summary of the successful and unsuccessful assets migrated
 
 Please note - None of the assets will be removed from the source as part of this process.
