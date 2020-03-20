@@ -27,7 +27,7 @@ This is set in the Reporting Services Configuration Manager under Web Service UR
 ![image](https://user-images.githubusercontent.com/52690905/62327114-9ae5ee00-b464-11e9-9bf1-0fe399bcd152.png)
 
 #### File Path: 
-This refers to the relative path to your file or folder on the report server. If the path references a file, the tool will convert and push only that individual file. If the path references a folder, the tool will convert and try to push all the report files within that folder.  This would include any reports contained in subfolders of the folder path you select.
+This refers to the relative path to your file or folder on the report server. If the path references a file, the tool will convert and push only that individual file. If the path references a folder, the tool will convert and try to push all the report files within that folder. This would include any reports contained in the folder and would convert dependencies that might be located in other folders or subfolders (such as Shared DataSources and Shared DataSets). Report in subfolders will not be published.
 
 #### Workspace Name:
 This is the name of the workspace you want to upload your files to. Surround the name with quotation marks if there’s  a space in the name. For example:
