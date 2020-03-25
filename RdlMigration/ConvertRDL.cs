@@ -2,6 +2,7 @@
 // Licensed under the MIT License (MIT)
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
@@ -21,6 +22,11 @@ namespace RdlMigration
     /// </summary>
     public class ConvertRDL
     {
+        private string rootFolder;
+        private ConcurrentDictionary<string, string> reportNameMap = new ConcurrentDictionary<string, string>();
+        private PowerBIClientWrapper powerBIPortal;
+        private RdlFileIO rdlFileIO;
+        
         /// <summary>
         /// Takes a folder of reports, convert them and upload them to PBI workspace.
         /// </summary>
@@ -31,10 +37,10 @@ namespace RdlMigration
         public void ConvertFolder(string urlEndPoint, string inputPath, string workspaceName, string clientID)
         {
             Trace("Starting the log-in window");
-            PowerBIClientWrapper powerBIPortal = new PowerBIClientWrapper(workspaceName, clientID);
+            powerBIPortal = new PowerBIClientWrapper(workspaceName, clientID);
             Trace("Log-in successfully, retrieving the reports...");
 
-            RdlFileIO rdlFileIO = new RdlFileIO(urlEndPoint);
+            rdlFileIO = new RdlFileIO(urlEndPoint);
 
             Trace($"Starting conversion and uploading the reports {DateTime.UtcNow.ToString()}");
 
@@ -43,8 +49,15 @@ namespace RdlMigration
                 Directory.CreateDirectory("output");
             }
 
+            // subreport logic
+            // add file name array
+            // use while loop until all files are added
+
             if (!rdlFileIO.IsFolder(inputPath))
             {
+                rootFolder = Path.GetDirectoryName(inputPath).Replace("\\", "/");
+                var reportName = Path.GetFileName(inputPath);
+                reportNameMap.TryAdd(reportName, inputPath);
                 ConvertAndUploadReport(
                                         powerBIPortal,
                                         rdlFileIO,
@@ -52,9 +65,15 @@ namespace RdlMigration
             }
             else
             {
+                rootFolder = inputPath;
                 var reportPaths = rdlFileIO.GetReportsInFolder(inputPath);
 
                 Console.WriteLine($"Found {reportPaths.Length} reports to convert");
+                foreach (string reportPath in reportPaths)
+                {
+                    var reportName = Path.GetFileName(reportPath);
+                    reportNameMap.TryAdd(reportName, reportPath);
+                }
                 Parallel.ForEach(reportPaths, reportPath => ConvertAndUploadReport(
                                                                                 powerBIPortal,
                                                                                 rdlFileIO,
@@ -194,6 +213,7 @@ namespace RdlMigration
             Stream outputFile = new MemoryStream();
             ConvertFileWithDataSet(doc, dataSetDict);
             ConvertFileWithDataSource(doc, dataSources);
+            DiscoverSubreports(doc);
             doc.Save(outputFile);
             outputFile.Position = 0;
 
@@ -217,6 +237,7 @@ namespace RdlMigration
 
             ConvertFileWithDataSet(doc, dataSetDict);
             ConvertFileWithDataSource(doc, dataSources);
+            DiscoverSubreports(doc);
             doc.Save(outputFileName);
 
             return outputFileName;
@@ -558,6 +579,54 @@ namespace RdlMigration
             }
 
             return currNode;
+        }
+
+        private void DiscoverSubreports(XDocument doc)
+        {
+            var subreports = doc.Descendants(doc.Root.Name.Namespace + "Subreport");
+            var subreportPaths = new List<string>();
+            foreach (XElement subreport in subreports)
+            {
+                var subreportName = subreport.Elements().First().Value;
+                var subreportPath = Path.Combine(rootFolder, subreportName);
+                subreportPath = Path.GetFullPath(subreportPath).Replace("\\", "/").Replace("C:", ""); // TODO: how to not hard code C drive
+                subreportName = Path.GetFileName(subreportPath);
+                
+                try
+                {
+                    if (rdlFileIO.IsFolder(subreportPath))
+                    {
+                        Trace($"SUBREPORT FAIL : {subreportPath} Subreport does not exist");
+                        continue;
+                    }
+                }
+                catch (Exception)
+                {
+                    Trace($"SUBREPORT FAIL : {subreportPath} Subreport does not exist");
+                    continue;
+                }
+
+                if (!reportNameMap.TryGetValue(subreportName, out string existingSubreportPath))
+                {
+                    subreportPaths.Add(subreportPath);
+                    reportNameMap.TryAdd(subreportName, subreportPath);
+                    // subreport.Elements().First().SetValue(subreportName);
+                    Trace($"SUBREPORT : Attempting to upload subreport from {subreportPath}");
+                }
+                // else if (string.Equals(subreportPath, existingSubreportPath))
+                // {
+                //     subreport.Elements().First().SetValue(subreportName);
+                // }
+                else
+                {
+                    Trace($"SUBREPORT : {subreportPath} A report with the same file name is already in the upload queue");
+                }
+            }
+            
+            Parallel.ForEach(subreportPaths, subreportPath => ConvertAndUploadReport(
+                                                                                powerBIPortal,
+                                                                                rdlFileIO,
+                                                                                subreportPath));
         }
 
         private bool IsSQLAzure(string connectString)
