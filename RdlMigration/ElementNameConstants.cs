@@ -85,10 +85,10 @@ namespace RdlMigration
         public class PowerBIWrapperConstants
         {
             public const string MyWorkspace = "My Workspace";
-            public const string ResourceUrl = "https://analysis.windows-int.net/powerbi/api"; // https://analysis.windows.net/powerbi/api
+            public const string ResourceUrl = "https://analysis.windows.net/powerbi/api";
             public const string RedirectUrl = "urn:ietf:wg:oauth:2.0:oob";
-            public const string AuthorityUri = "https://login.windows-ppe.net/common/"; // https://login.windows.net/common/
-            public const string PowerBiApiUri = "https://powerbiapi.analysis-df.windows.net"; // https://api.powerbi.com
+            public const string AuthorityUri = "https://login.microsoftonline.com/common";
+            public const string PowerBiApiUri = "https://api.powerbi.com";
         }
     }
 }

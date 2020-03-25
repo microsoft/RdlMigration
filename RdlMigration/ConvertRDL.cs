@@ -24,7 +24,7 @@ namespace RdlMigration
     {
         private string rootFolder;
         private ConcurrentDictionary<string, string> reportNameMap = new ConcurrentDictionary<string, string>();
-        private PowerBIClientWrapper powerBIPortal;
+        private PowerBIClientWrapper powerBIClient;
         private RdlFileIO rdlFileIO;
         
         /// <summary>
@@ -37,7 +37,7 @@ namespace RdlMigration
         public void ConvertFolder(string urlEndPoint, string inputPath, string workspaceName, string clientID)
         {
             Trace("Starting the log-in window");
-            powerBIPortal = new PowerBIClientWrapper(workspaceName, clientID);
+            powerBIClient = new PowerBIClientWrapper(workspaceName, clientID);
             Trace("Log-in successfully, retrieving the reports...");
 
             rdlFileIO = new RdlFileIO(urlEndPoint);
@@ -55,7 +55,7 @@ namespace RdlMigration
                 var reportName = Path.GetFileName(inputPath);
                 reportNameMap.TryAdd(reportName, inputPath);
                 ConvertAndUploadReport(
-                                        powerBIPortal,
+                                        powerBIClient,
                                         rdlFileIO,
                                         inputPath);
             }
@@ -71,7 +71,7 @@ namespace RdlMigration
                     reportNameMap.TryAdd(reportName, reportPath);
                 }
                 Parallel.ForEach(reportPaths, reportPath => ConvertAndUploadReport(
-                                                                                powerBIPortal,
+                                                                                powerBIClient,
                                                                                 rdlFileIO,
                                                                                 reportPath));
             }
@@ -603,7 +603,7 @@ namespace RdlMigration
                     continue;
                 }
 
-                if (!reportNameMap.TryGetValue(subreportName, out string existingSubreportPath))
+                if (!reportNameMap.ContainsKey(subreportName))
                 {
                     subreportPaths.Add(subreportPath);
                     reportNameMap.TryAdd(subreportName, subreportPath);
@@ -616,7 +616,7 @@ namespace RdlMigration
             }
             
             Parallel.ForEach(subreportPaths, subreportPath => ConvertAndUploadReport(
-                                                                                powerBIPortal,
+                                                                                powerBIClient,
                                                                                 rdlFileIO,
                                                                                 subreportPath));
         }
