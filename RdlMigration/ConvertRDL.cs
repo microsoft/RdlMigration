@@ -49,10 +49,6 @@ namespace RdlMigration
                 Directory.CreateDirectory("output");
             }
 
-            // subreport logic
-            // add file name array
-            // use while loop until all files are added
-
             if (!rdlFileIO.IsFolder(inputPath))
             {
                 rootFolder = Path.GetDirectoryName(inputPath).Replace("\\", "/");
@@ -589,7 +585,8 @@ namespace RdlMigration
             {
                 var subreportName = subreport.Elements().First().Value;
                 var subreportPath = Path.Combine(rootFolder, subreportName);
-                subreportPath = Path.GetFullPath(subreportPath).Replace("\\", "/").Replace("C:", ""); // TODO: how to not hard code C drive
+                subreportPath = Path.GetFullPath(subreportPath).Replace("\\", "/");
+                subreportPath = subreportPath.Substring(subreportPath.IndexOf('/'));
                 subreportName = Path.GetFileName(subreportPath);
                 
                 try
@@ -610,13 +607,8 @@ namespace RdlMigration
                 {
                     subreportPaths.Add(subreportPath);
                     reportNameMap.TryAdd(subreportName, subreportPath);
-                    // subreport.Elements().First().SetValue(subreportName);
                     Trace($"SUBREPORT : Attempting to upload subreport from {subreportPath}");
                 }
-                // else if (string.Equals(subreportPath, existingSubreportPath))
-                // {
-                //     subreport.Elements().First().SetValue(subreportName);
-                // }
                 else
                 {
                     Trace($"SUBREPORT : {subreportPath} A report with the same file name is already in the upload queue");
