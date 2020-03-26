@@ -598,7 +598,7 @@ namespace RdlMigration
                 subreportPath = subreportPath.Substring(subreportPath.IndexOf('/'));   // file path from server root
                 subreportName = Path.GetFileName(subreportPath);                       // clean file name with no folder path
                 
-                if (!rdlFileIO.IsFile(subreportPath))
+                if (!rdlFileIO.IsReport(subreportPath))
                 {
                     Trace($"SUBREPORT FAIL : {subreportPath} Subreport does not exist");
                     continue;
@@ -611,7 +611,7 @@ namespace RdlMigration
                 }
                 else
                 {
-                    Trace($"SUBREPORT : {subreportPath} A report with the same file name is already in the upload queue");
+                    Trace($"CONFLICT : a file with name \"{subreportName}\" has already been uploaded ");
                 }
             }
             

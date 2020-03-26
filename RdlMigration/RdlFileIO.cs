@@ -74,16 +74,9 @@ namespace RdlMigration
             }
         }
 
-        public bool IsFile(string itemPath)
+        public bool IsReport(string itemPath)
         {
-            if (server.GetItemType(itemPath) == SoapApiConstants.Report)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return (server.GetItemType(itemPath) == SoapApiConstants.Report);
         }
 
         /// <summary>
