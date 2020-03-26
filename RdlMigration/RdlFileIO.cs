@@ -74,6 +74,18 @@ namespace RdlMigration
             }
         }
 
+        public bool IsFile(string itemPath)
+        {
+            if (server.GetItemType(itemPath) == SoapApiConstants.Report)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         /// <summary>
         /// Downloads a rdl file from report Server.
         /// </summary>

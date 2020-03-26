@@ -589,24 +589,15 @@ namespace RdlMigration
                 subreportPath = subreportPath.Substring(subreportPath.IndexOf('/'));
                 subreportName = Path.GetFileName(subreportPath);
                 
-                try
-                {
-                    if (rdlFileIO.IsFolder(subreportPath))
-                    {
-                        Trace($"SUBREPORT FAIL : {subreportPath} Subreport does not exist");
-                        continue;
-                    }
-                }
-                catch (Exception)
+                if (!rdlFileIO.IsFile(subreportPath))
                 {
                     Trace($"SUBREPORT FAIL : {subreportPath} Subreport does not exist");
                     continue;
                 }
 
-                if (!reportNameMap.ContainsKey(subreportName))
+                if (reportNameMap.TryAdd(subreportName, subreportPath))
                 {
                     subreportPaths.Add(subreportPath);
-                    reportNameMap.TryAdd(subreportName, subreportPath);
                     Trace($"SUBREPORT : Attempting to upload subreport from {subreportPath}");
                 }
                 else
