@@ -23,10 +23,13 @@ namespace RdlMigration
     public class ConvertRDL
     {
         private string rootFolder;
-        private ConcurrentDictionary<string, string> reportNameMap = new ConcurrentDictionary<string, string>();
         private PowerBIClientWrapper powerBIClient;
         private RdlFileIO rdlFileIO;
-        
+
+        // Report name to file path mapping -
+        // Avoid uploading the same report twice and blocks other reports with colliding file names
+        private ConcurrentDictionary<string, string> reportNameMap = new ConcurrentDictionary<string, string>();
+
         /// <summary>
         /// Takes a folder of reports, convert them and upload them to PBI workspace.
         /// </summary>
@@ -577,17 +580,23 @@ namespace RdlMigration
             return currNode;
         }
 
+        /// <summary>
+        /// This method takes in an XDocument, looks for valid subreports within, and attempts 
+        /// to upload these subreports.
+        /// </summary>
+        /// <param name="doc"> The XDocument of local rdl File.</param>
         private void DiscoverSubreports(XDocument doc)
         {
             var subreports = doc.Descendants(doc.Root.Name.Namespace + "Subreport");
             var subreportPaths = new List<string>();
+
             foreach (XElement subreport in subreports)
             {
                 var subreportName = subreport.Elements().First().Value;
                 var subreportPath = Path.Combine(rootFolder, subreportName);
                 subreportPath = Path.GetFullPath(subreportPath).Replace("\\", "/");
-                subreportPath = subreportPath.Substring(subreportPath.IndexOf('/'));
-                subreportName = Path.GetFileName(subreportPath);
+                subreportPath = subreportPath.Substring(subreportPath.IndexOf('/'));   // file path from server root
+                subreportName = Path.GetFileName(subreportPath);                       // clean file name with no folder path
                 
                 if (!rdlFileIO.IsFile(subreportPath))
                 {
