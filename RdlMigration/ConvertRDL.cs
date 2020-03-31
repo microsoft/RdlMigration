@@ -31,7 +31,7 @@ namespace RdlMigration
         public ConcurrentDictionary<string, int> reportNameMap = new ConcurrentDictionary<string, int>();
 
         // Queue of all files to be uploaded
-        public List<string> reportPaths = new List<string>();
+        public Queue<string> reportPaths = new Queue<string>();
 
         /// <summary>
         /// Takes a folder of reports, convert them and upload them to PBI workspace.
@@ -60,7 +60,7 @@ namespace RdlMigration
                 rootFolder = Path.GetDirectoryName(inputPath).Replace("\\", "/");
                 var reportName = Path.GetFileName(inputPath);
                 reportNameMap.TryAdd(reportName, 1);
-                reportPaths.Add(inputPath);
+                reportPaths.Enqueue(inputPath);
             }
             else
             {
@@ -72,10 +72,11 @@ namespace RdlMigration
                     var reportName = Path.GetFileName(reportPath);
                     reportNameMap.TryAdd(reportName, 1);
                 }
-                reportPaths.AddRange(rootReports);
+                rootReports.ToList().ForEach(reportPaths.Enqueue);
             }
-            foreach (string reportPath in reportPaths.ToList())
+            while (reportPaths.Count > 0)
             {
+                string reportPath = reportPaths.Dequeue();
                 ConvertAndUploadReport(
                     powerBIClient,
                     rdlFileIO,
@@ -215,7 +216,7 @@ namespace RdlMigration
             Stream outputFile = new MemoryStream();
             ConvertFileWithDataSet(doc, dataSetDict);
             ConvertFileWithDataSource(doc, dataSources);
-            reportPaths.AddRange(DiscoverSubreports(doc));
+            DiscoverSubreports(doc).ForEach(reportPaths.Enqueue);
             doc.Save(outputFile);
             outputFile.Position = 0;
 
@@ -239,7 +240,7 @@ namespace RdlMigration
 
             ConvertFileWithDataSet(doc, dataSetDict);
             ConvertFileWithDataSource(doc, dataSources);
-            reportPaths.AddRange(DiscoverSubreports(doc));
+            DiscoverSubreports(doc).ForEach(reportPaths.Enqueue);
             doc.Save(outputFileName);
 
             return outputFileName;
