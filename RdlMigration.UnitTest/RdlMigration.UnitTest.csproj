@@ -75,6 +75,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConvertRDLTests.cs" />
     <Compile Include="FileTest.cs" />
     <Compile Include="RdlFileIOTests.cs" />
     <Compile Include="PowerBIClientWrapperTests.cs" />

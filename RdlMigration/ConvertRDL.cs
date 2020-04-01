@@ -2,6 +2,7 @@
 // Licensed under the MIT License (MIT)
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
@@ -21,6 +22,17 @@ namespace RdlMigration
     /// </summary>
     public class ConvertRDL
     {
+        public string rootFolder;
+        public RdlFileIO rdlFileIO;
+
+        // Report name to file count mapping -
+        // Avoid uploading the same report twice and blocks other reports with colliding file names
+        // Can be used in future work to support renaming of duplicate files
+        public ConcurrentDictionary<string, int> reportNameMap = new ConcurrentDictionary<string, int>();
+
+        // Queue of all files to be uploaded
+        public Queue<string> reportPaths = new Queue<string>();
+
         /// <summary>
         /// Takes a folder of reports, convert them and upload them to PBI workspace.
         /// </summary>
@@ -31,10 +43,10 @@ namespace RdlMigration
         public void ConvertFolder(string urlEndPoint, string inputPath, string workspaceName, string clientID)
         {
             Trace("Starting the log-in window");
-            PowerBIClientWrapper powerBIPortal = new PowerBIClientWrapper(workspaceName, clientID);
+            PowerBIClientWrapper powerBIClient = new PowerBIClientWrapper(workspaceName, clientID);
             Trace("Log-in successfully, retrieving the reports...");
 
-            RdlFileIO rdlFileIO = new RdlFileIO(urlEndPoint);
+            rdlFileIO = new RdlFileIO(urlEndPoint);
 
             Trace($"Starting conversion and uploading the reports {DateTime.UtcNow.ToString()}");
 
@@ -45,20 +57,30 @@ namespace RdlMigration
 
             if (!rdlFileIO.IsFolder(inputPath))
             {
-                ConvertAndUploadReport(
-                                        powerBIPortal,
-                                        rdlFileIO,
-                                        inputPath);
+                rootFolder = Path.GetDirectoryName(inputPath).Replace("\\", "/");
+                var reportName = Path.GetFileName(inputPath);
+                reportNameMap.TryAdd(reportName, 1);
+                reportPaths.Enqueue(inputPath);
             }
             else
             {
-                var reportPaths = rdlFileIO.GetReportsInFolder(inputPath);
-
-                Console.WriteLine($"Found {reportPaths.Length} reports to convert");
-                Parallel.ForEach(reportPaths, reportPath => ConvertAndUploadReport(
-                                                                                powerBIPortal,
-                                                                                rdlFileIO,
-                                                                                reportPath));
+                rootFolder = inputPath;
+                var rootReports = rdlFileIO.GetReportsInFolder(inputPath);
+                Console.WriteLine($"Found {rootReports.Length} reports to convert");
+                foreach (string reportPath in reportPaths)
+                {
+                    var reportName = Path.GetFileName(reportPath);
+                    reportNameMap.TryAdd(reportName, 1);
+                }
+                rootReports.ToList().ForEach(reportPaths.Enqueue);
+            }
+            while (reportPaths.Count > 0)
+            {
+                string reportPath = reportPaths.Dequeue();
+                ConvertAndUploadReport(
+                    powerBIClient,
+                    rdlFileIO,
+                    reportPath);
             }
         }
 
@@ -66,11 +88,11 @@ namespace RdlMigration
         {
             var reportName = Path.GetFileName(reportPath);
             var report = rdlFileIO.DownloadRdl(reportPath);
-            SaveAndCopyStream(reportName, report, $"output\\{reportName}_original.rdl");  
+            SaveAndCopyStream(reportName, report, $"output\\{reportName}_original.rdl");
 
             if (powerBIClient.ExistReport(reportName))
             {
-                Trace($"CONFLICT : {reportName}  A report with same name already exist on Specific workspace");
+                Trace($"CONFLICT : {reportName}  A report with the same name already exists in the workspace");
             }
             else
             {
@@ -194,6 +216,7 @@ namespace RdlMigration
             Stream outputFile = new MemoryStream();
             ConvertFileWithDataSet(doc, dataSetDict);
             ConvertFileWithDataSource(doc, dataSources);
+            DiscoverSubreports(doc).ForEach(reportPaths.Enqueue);
             doc.Save(outputFile);
             outputFile.Position = 0;
 
@@ -217,6 +240,7 @@ namespace RdlMigration
 
             ConvertFileWithDataSet(doc, dataSetDict);
             ConvertFileWithDataSource(doc, dataSources);
+            DiscoverSubreports(doc).ForEach(reportPaths.Enqueue);
             doc.Save(outputFileName);
 
             return outputFileName;
@@ -558,6 +582,44 @@ namespace RdlMigration
             }
 
             return currNode;
+        }
+
+        /// <summary>
+        /// This method takes in an XDocument, looks for valid subreports within, and attempts 
+        /// to upload these subreports.
+        /// </summary>
+        /// <param name="doc"> The XDocument of local rdl File.</param>
+        public List<string> DiscoverSubreports(XDocument doc)
+        {
+            var subreports = doc.Descendants(doc.Root.Name.Namespace + "Subreport");
+            var subreportPaths = new List<string>();
+
+            foreach (XElement subreport in subreports)
+            {
+                var subreportName = subreport.Elements().First().Value;
+                var subreportPath = Path.Combine(rootFolder, subreportName);
+                subreportPath = Path.GetFullPath(subreportPath).Replace("\\", "/");
+                subreportPath = subreportPath.Substring(subreportPath.IndexOf('/'));   // file path from server root
+                subreportName = Path.GetFileName(subreportPath);                       // clean file name with no folder path
+                
+                if (!rdlFileIO.IsReport(subreportPath))
+                {
+                    Trace($"SUBREPORT FAIL : {subreportPath} does not exist or is not a report");
+                    continue;
+                }
+
+                if (reportNameMap.TryAdd(subreportName, 1))
+                {
+                    subreportPaths.Add(subreportPath);
+                    Trace($"SUBREPORT : Attempting to upload subreport from {subreportPath}");
+                }
+                else
+                {
+                    Trace($"CONFLICT : a file with name \"{subreportName}\" has already been uploaded ");
+                }
+            }
+
+            return subreportPaths;
         }
 
         private bool IsSQLAzure(string connectString)
