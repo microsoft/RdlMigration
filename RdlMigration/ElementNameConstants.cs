@@ -18,7 +18,7 @@ namespace RdlMigration
         /// </summary>
         public class SoapApiConstants
         {
-            public const string SOAPApiExtension = "/ReportService2010.asmx?wsdl";
+            public const string SOAPApiExtension = "/ReportService2010.asmx";
             public const string Report = "Report";
             public const string Folder = "Folder";
         }
