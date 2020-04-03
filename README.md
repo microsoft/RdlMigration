@@ -16,8 +16,35 @@ Please note - None of the assets will be removed from the source as part of this
 
     # RdlMigration <your Base url endpoint> <file Path> <WorkspaceName> <client-id>
 
-This command will save all the converted files to local disk and display the status of each file in the command window, as well as a file called ConversionLog.txt
+This command will save all the converted files to local disk and display the status of each file in the command window, as well as a file called ConversionLog.txt  
 
+#### Examples:
+
+The examples below assume that you are running in a command prompt where the application RdlMigration.exe was copied to. You can get the application by cloning and building this repository, or by downloading the latest build from the 'Releases' tab. See details below on how to find your reportserver endpoint and how to create a Power BI client-id.
+
+•	Upload  all reports from 'My reports' folder from a native mode installation of SQL Server Reporting Services or Power BI Report Server to 'My Worspace' in powerbi.com.
+    
+ ```
+ RdlMigration https://ssrsservername/reportserver "/My Reports" "My Workspace" <client-id>
+ ```
+    
+•	Upload  all reports from '/Sales' folder from a native mode installation of SQL Server Reporting Services or Power BI Report Server to 'Sales' workspace in powerbi.com.
+    
+ ```
+ RdlMigration https://ssrsservername/reportserver "/Sales" "Sales" <client-id>
+ ```
+
+•	Upload all reports from '/Shared Documents/Reports' folder from a sharepoint integrated mode installation of SQL Server Reporting Services to 'Reports' workspace in powerbi.com.
+    
+```
+RdlMigration "https://sharepointservername/_vti_bin/reportserver" "https://sharepointservername/Shared Documents/Reports" "Reports" <client-id>
+```
+
+•	Upload a single report called MonthlySales from '/Shared Documents/SalesReports' folder from a sharepoint integrated mode installation of SQL Server Reporting Services to 'Reports' workspace in powerbi.com.
+    
+```
+RdlMigration "https://sharepointservername/_vti_bin/reportserver" "https://sharepointservername/Shared Documents/SalesReports/MonthlySales.rdl" "Reports" <client-id>
+```
 ---
 ## Input details:
 
