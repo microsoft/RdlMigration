@@ -596,12 +596,16 @@ namespace RdlMigration
 
             foreach (XElement subreport in subreports)
             {
-                var subreportName = subreport.Elements().First().Value;
-                var subreportPath = Path.Combine(rootFolder, subreportName);
-                subreportPath = Path.GetFullPath(subreportPath).Replace("\\", "/");
-                subreportPath = subreportPath.Substring(subreportPath.IndexOf('/'));   // file path from server root
-                subreportName = Path.GetFileName(subreportPath);                       // clean file name with no folder path
-                
+                string subreportName = subreport.Descendants().Where(x => x.Name.LocalName == "ReportName").First().Value;
+                string subreportPath = Uri.EscapeUriString(subreportName);
+                if (!Uri.IsWellFormedUriString(subreportPath, UriKind.Absolute))            // sharepoint subreports are linked with full URIs
+                {
+                    subreportPath = Path.Combine(rootFolder, subreportName);
+                    subreportPath = Path.GetFullPath(subreportPath).Replace("\\", "/");
+                    subreportPath = subreportPath.Substring(subreportPath.IndexOf('/'));    // file path from server root
+                }
+                subreportName = Path.GetFileName(subreportPath);                            // clean file name with no folder path
+
                 if (!rdlFileIO.IsReport(subreportPath))
                 {
                     Trace($"SUBREPORT FAIL : {subreportPath} does not exist or is not a report");
