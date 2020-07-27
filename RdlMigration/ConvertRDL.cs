@@ -13,6 +13,7 @@ using Microsoft.Rest;
 using Newtonsoft.Json.Linq;
 using RdlMigration.ReportServerApi;
 using static RdlMigration.ElementNameConstants;
+using DataSetReferenceNamePair = System.Collections.Generic.KeyValuePair<string, string>;
 
 namespace RdlMigration
 {
@@ -20,7 +21,7 @@ namespace RdlMigration
     /// The class that actually does the conversion.
     /// Methods of reading local files are also included in this file.
     /// </summary>
-    public class ConvertRDL
+    public sealed class ConvertRDL
     {
         public string rootFolder;
         public RdlFileIO rdlFileIO;
@@ -98,10 +99,10 @@ namespace RdlMigration
             {
                 try
                 {
-                    XElement[] dataSets = rdlFileIO.GetDataSets(reportPath, out Dictionary<string, XElement> referenceDataSetMap);
+                    XElement[] dataSets = rdlFileIO.GetDataSets(reportPath, out Dictionary<KeyValuePair<string, string>, XElement> referenceDataSetMap);
                     DataSource[] dataSources = rdlFileIO.GetDataSources(reportPath);
 
-                    var convertedFile = ConvertFile(report, dataSources, referenceDataSetMap);
+                    var convertedFile = ConvertFile(reportPath, report, dataSources, referenceDataSetMap);
                     SaveAndCopyStream(reportName, convertedFile, $"output\\{reportName}_convert.rdl");
 
                     powerBIClient.UploadRDL(reportName + ReportFileExtension, convertedFile);
@@ -167,41 +168,6 @@ namespace RdlMigration
         }
 
         /// <summary>
-        /// main method that runs soap api, take a rdl in report server and change it.
-        /// </summary>
-        /// <param name="urlEndPoint">The report Server url.</param>
-        /// <param name="inputReportPath">The path of input report file.</param>
-        /// <param name="outputPath"> The path of output file.</param>
-        /// <param name="downloadPath">The path to store original rdl and rds file.</param>
-        /// <returns>the output file path.</returns>
-        public string RunSoap(string urlEndPoint, string inputReportPath, string outputPath = "./", string downloadPath = "./testFiles/")
-        {
-            Directory.CreateDirectory(outputPath);
-            Directory.CreateDirectory(downloadPath);
-
-            string reportName = Path.GetFileNameWithoutExtension(inputReportPath);
-            string outputFileName = Path.Combine(outputPath, reportName + ReportFileExtension);
-
-            RdlFileIO rdlFileIO = new RdlFileIO(urlEndPoint);
-
-            var rdlFilePath = rdlFileIO.DownloadRdl(inputReportPath, downloadPath);
-
-            XElement[] dataSets = rdlFileIO.GetDataSets(inputReportPath, out Dictionary<string, XElement> referenceDataSetMap);
-            DataSource[] dataSources = rdlFileIO.GetDataSources(inputReportPath);
-
-            var dataSourceFilePath = Path.Combine(downloadPath, reportName + DataSourceFileExtension);
-            var dataSetDirectoryPath = downloadPath + reportName + "_DataSets";
-
-            rdlFileIO.WriteDataSetContent(dataSets, dataSetDirectoryPath);
-            rdlFileIO.WriteDataSourceContent(dataSources, dataSourceFilePath);
-
-            ConvertFile(rdlFilePath, dataSources, referenceDataSetMap, outputPath);
-
-            Console.WriteLine($"Conversion from  {inputReportPath}  to  {outputFileName}  Completed.");
-            return outputFileName;
-        }
-
-        /// <summary>
         /// the method that actually does the conversion, take the rdl file, its datasource/dataSet and convert
         /// to a new file with shared datasource.
         /// </summary>
@@ -209,12 +175,12 @@ namespace RdlMigration
         /// <param name="dataSources"> array of datasources used for conversion.</param>
         /// <param name="dataSetDict">Dict of Name-XElement Pair of dataSets used for conversion.</param>
         /// <returns>  the output file stream.</returns>
-        public Stream ConvertFile(Stream rdlFile, DataSource[] dataSources, Dictionary<string, XElement> dataSetDict)
+        public Stream ConvertFile(string filePath, Stream rdlFile, DataSource[] dataSources, Dictionary<DataSetReferenceNamePair, XElement> dataSetDict)
         {
             XDocument doc = XDocument.Load(rdlFile);
 
             Stream outputFile = new MemoryStream();
-            ConvertFileWithDataSet(doc, dataSetDict);
+            ConvertFileWithDataSet(filePath, doc, dataSetDict);
             ConvertFileWithDataSource(doc, dataSources);
             DiscoverSubreports(doc).ForEach(reportPaths.Enqueue);
             doc.Save(outputFile);
@@ -232,13 +198,13 @@ namespace RdlMigration
         /// <param name="dataSetDict">Dict of Name-XElement Pair of dataSets used for conversion.</param>
         /// <param name="outputPath">Output File Path.</param>
         /// <returns>the path of file saved in local disk.</returns>
-        public string ConvertFile(string rdlFilePath, DataSource[] dataSources, Dictionary<string, XElement> dataSetDict, string outputPath)
+        public string ConvertFile(string rdlFilePath, DataSource[] dataSources, Dictionary<DataSetReferenceNamePair, XElement> dataSetDict, string outputPath)
         {
             XDocument doc = XDocument.Load(rdlFilePath);
 
             string outputFileName = Path.Combine(outputPath, Path.GetFileNameWithoutExtension(rdlFilePath) + ReportFileExtension);
 
-            ConvertFileWithDataSet(doc, dataSetDict);
+            ConvertFileWithDataSet(rdlFilePath, doc, dataSetDict);
             ConvertFileWithDataSource(doc, dataSources);
             DiscoverSubreports(doc).ForEach(reportPaths.Enqueue);
             doc.Save(outputFileName);
@@ -282,7 +248,7 @@ namespace RdlMigration
         /// </summary>
         /// <param name="doc">The XDocument of rdl File.</param>
         /// <param name="dataSetMaps">Dict of Name-XElement Pair of dataSets used for conversion.</param>
-        public void ConvertFileWithDataSet(XDocument doc, Dictionary<string, XElement> dataSetMaps)
+        public void ConvertFileWithDataSet(string rdlfilePath, XDocument doc, Dictionary<DataSetReferenceNamePair, XElement> dataSetMaps)
         {
             var dataSetRootElememt = doc.Descendants(doc.Root.Name.Namespace + DataSetConstants.DataSets).FirstOrDefault();
             if (dataSetRootElememt != null)
@@ -293,13 +259,16 @@ namespace RdlMigration
 
                 for (int i = dataSetElements.Count() - 1; i >= 0; i--)
                 {
-                    XElement dataSetElement = dataSetElements.ElementAt(i);
+                    var dataSetElement = dataSetElements.ElementAt(i);
+                    var datasetName = dataSetElement.Attribute("Name").Value;
                     var sharedDataSetReferenceName = dataSetElement.Name.Namespace + DataSetConstants.SharedDataSetReference;
                     if (dataSetElement.Descendants(sharedDataSetReferenceName).Count() == 1)
                     {
-                        string dataSetName = dataSetElement.Descendants(sharedDataSetReferenceName).First().Value;
-                        if (dataSetMaps.TryGetValue(dataSetName, out XElement currDataSetNode))
-                        {
+                        string datasetReference = dataSetElement.Descendants(sharedDataSetReferenceName).First().Value;
+                        var key = new DataSetReferenceNamePair(rdlfilePath, datasetName);
+                        XElement currDataSetNode = null;
+                        if (dataSetMaps.TryGetValue(key, out currDataSetNode))
+                        { 
                             currDataSetNode = new XElement(currDataSetNode);    // change passing by reference to by value, thus modification would not effect original dataSet
                             ChangeNameSpaceHelper(currNamespace, currDataSetNode);
 
@@ -310,7 +279,7 @@ namespace RdlMigration
                                 referenceNodes.ElementAt(0).ReplaceWith(new XElement(currDataSetNode.Name.Namespace + DataSetConstants.DataSourceName, dataSetSourceName));
                             }
 
-                            currDataSetNode.Attribute("Name").SetValue(dataSetElement.Attribute("Name").Value);
+                            currDataSetNode.Attribute("Name").SetValue(datasetName);
 
                             AlignParameters(dataSetElement, currDataSetNode);
 
@@ -325,83 +294,11 @@ namespace RdlMigration
                         }
                         else
                         {
-                            throw new Exception($"Can't find corresponding Data Set {dataSetName}");
+                            throw new Exception($"Can't find corresponding Data Set {datasetName}-{datasetReference}");
                         }
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Reads a datasource file and take it into DataSource object.
-        /// </summary>
-        /// <param name="filePath">The local rds File path.</param>
-        /// <returns> an array of DataSource Object.</returns>
-        public DataSource[] ReadDataSourceFile(string filePath)
-        {
-            XDocument doc = XDocument.Load(filePath);
-            var dataSources = doc.Element(DataSourceConstants.DataSources) == null ? new XElement[0] : doc.Element(DataSourceConstants.DataSources).Elements();
-            DataSource[] retDataSourceArray = new DataSource[dataSources.Count()];
-            int i = 0;
-            foreach (XElement childNode in dataSources)
-            {
-                DataSource temp = new DataSource
-                {
-                    Name = childNode.Attribute("Name").Value
-                };
-                DataSourceDefinition currDataSourceDefinition = new DataSourceDefinition
-                {
-                    Extension = childNode.Element(DataSourceConstants.Extension).Value,
-                    ConnectString = childNode.Element(DataSourceConstants.ConnectString).Value,
-                    UseOriginalConnectString = childNode.Element(DataSourceConstants.UseOriginalConnectString).Value == "True",
-                    OriginalConnectStringExpressionBased = childNode.Element(DataSourceConstants.OriginalConnectStringExpressionBased).Value == "True"
-                };
-
-                Enum.TryParse(childNode.Element(DataSourceConstants.CredentialRetrieval).Value, true, out CredentialRetrievalEnum credentialRetrieval);
-                currDataSourceDefinition.CredentialRetrieval = credentialRetrieval;
-
-                currDataSourceDefinition.Enabled = childNode.Element(DataSourceConstants.Enabled).Value == "True";
-
-                temp.Item = currDataSourceDefinition;
-
-                retDataSourceArray[i++] = temp;
-            }
-
-            return retDataSourceArray;
-        }
-
-        /// <summary>
-        ///  Reads a datasource file and take it into DataSource object.
-        /// </summary>
-        /// <param name="dirPath">The local rds File path.</param>
-        /// <returns> The Dictonary of Data Set Name and Data Set XElement.</returns>
-        public Dictionary<string, XElement> ReadDataSet(string dirPath)
-        {
-            Dictionary<string, XElement> retMap = new Dictionary<string, XElement>();
-            string[] filePaths;
-            try
-            {
-                filePaths = Directory.GetFiles(dirPath);
-            }
-            catch (Exception)
-            {
-                return retMap;
-            }
-
-            foreach (string filename in filePaths)
-            {
-                var currDataSetNode = ReadDataSetFile(filename);
-                retMap.Add(currDataSetNode.Attribute("Name").Value, currDataSetNode);
-            }
-
-            return retMap;
-        }
-
-        private XElement ReadDataSetFile(string filePath)
-        {
-            XDocument doc = XDocument.Load(filePath);
-            var dataSets = (XElement)doc.Root.FirstNode;
-            return dataSets;
         }
 
         private void AlignCalculatedFields(XElement reportFieldElement, XElement dataSetFieldElements)

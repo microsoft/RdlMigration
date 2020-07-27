@@ -1,14 +1,7 @@
 ﻿// Copyright (c) 2019 Microsoft Corporation. All Rights Reserved.
 // Licensed under the MIT License (MIT)
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading;
 using System.Xml.Linq;
-using Microsoft.PowerBI.Api.V2;
-using Microsoft.PowerBI.Api.V2.Models;
-using Microsoft.Rest;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RdlMigration.ReportServerApi;
@@ -22,7 +15,6 @@ namespace RdlMigration.UnitTest
         [TestMethod]
         public void SubreportsAreDiscovered()
         {
-            var mockApp = new Mock<ConvertRDL>();
             var mockServer = new Mock<IReportingService2010>();
 
             mockServer.Setup(p => p.GetItemType(It.IsAny<string>())).Returns(SoapApiConstants.Report);
@@ -40,7 +32,6 @@ namespace RdlMigration.UnitTest
         [TestMethod]
         public void InvalidPathsAreIgnored()
         {
-            var mockApp = new Mock<ConvertRDL>();
             var mockServer = new Mock<IReportingService2010>();
 
             mockServer.Setup(p => p.GetItemType(It.IsAny<string>())).Returns(SoapApiConstants.Folder);
@@ -56,7 +47,6 @@ namespace RdlMigration.UnitTest
         [TestMethod]
         public void DuplicateNamesAreIgnored()
         {
-            var mockApp = new Mock<ConvertRDL>();
             var mockServer = new Mock<IReportingService2010>();
 
             mockServer.Setup(p => p.GetItemType(It.IsAny<string>())).Returns(SoapApiConstants.Report);

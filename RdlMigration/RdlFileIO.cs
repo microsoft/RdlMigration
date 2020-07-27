@@ -53,6 +53,7 @@ namespace RdlMigration
             var reportPaths = from report in catagoryItems select report.Path;
             return reportPaths.ToArray();
         }
+
         /// <summary>
         /// Check if the input path is a folder or report. If neither throw an exception.
         /// </summary>
@@ -118,16 +119,16 @@ namespace RdlMigration
         /// </summary>
         /// <param name="filePath"> The remote path of the report file on server.</param>
         /// <returns>an List of DataSet Reference.</returns>
-        public List<string> GetDataSetReference(string filePath)
+        public List<KeyValuePair<string, string>> GetDataSetReference(string filePath)
         {
-            List<string> retList = new List<string>();
+            List<KeyValuePair<string, string>> retList = new List<KeyValuePair<string, string>>();
             foreach (var reference in server.GetItemReferences(filePath, DataSetConstants.DataSet))
             {
                 if (reference.Reference == null)
                 {
                     throw new Exception($"Bad report: cannot find data set {reference.Name}.");
                 }
-                retList.Add(reference.Reference);
+                retList.Add(new KeyValuePair<string, string>(reference.Name, reference.Reference));
             }
 
             return retList;
@@ -139,18 +140,22 @@ namespace RdlMigration
         /// <param name="filePath">The remote path of the report file on server.</param>
         /// <param name="dataSetReferenceMap">Dictionary that map string(reference) to DataSet, for later analysis and naming with datasource.</param>
         /// <returns>an array of XElement represenstation of DataSet Object.</returns>
-        public XElement[] GetDataSets(string filePath, out Dictionary<string, XElement> dataSetReferenceMap)
+        public XElement[] GetDataSets(string filePath, out Dictionary<KeyValuePair<string, string>, XElement> dataSetReferenceMap)
         {
-            dataSetReferenceMap = new Dictionary<string, XElement>();
+            dataSetReferenceMap = new Dictionary<KeyValuePair<string, string>, XElement>();
 
-            List<string> references = GetDataSetReference(filePath);
-            List<XElement> dataSetList = new List<XElement>();
-            foreach (string reference in references)
+            var references = GetDataSetReference(filePath);
+            var dataSetList = new List<XElement>();
+            foreach (var reference in references)
             {
-                XElement currDataSet = GetDataSetContent(reference);
-                if (!dataSetReferenceMap.ContainsKey(reference))
+                XElement currDataSet = GetDataSetContent(reference.Value);
+
+                var keys = new KeyValuePair<string, string>(filePath, reference.Key);
+                if (!dataSetReferenceMap.ContainsKey(keys))
                 {
-                    dataSetReferenceMap.Add(reference, currDataSet);
+                    // We add the path to the dataset in the service. But also add the map of path+key in case
+                    // the Rdl has a different path (common when dataset is set after the fact).
+                    dataSetReferenceMap.Add(keys, currDataSet);
                 }
 
                 if (currDataSet.Attribute("Name") != null)
@@ -170,7 +175,7 @@ namespace RdlMigration
 
         public XElement[] GetDataSets(string filePath)
         {
-            return GetDataSets(filePath, out Dictionary<string, XElement> retDict);
+            return GetDataSets(filePath, out Dictionary<KeyValuePair<string, string>, XElement> retDict);
         }
 
         /// <summary>
@@ -330,7 +335,6 @@ namespace RdlMigration
         /// <returns>corresponding dataSource Name.</returns>
         public static string SerializeDataSourceName(string path)
         {
-
             if (!dataSourceReferenceNameMap.TryGetValue(path, out string dataSourceName))
             {
                 string remoteDataSourceName = path.Split('/').Last();
