@@ -101,8 +101,11 @@ namespace RdlMigration
                     XElement[] dataSets = rdlFileIO.GetDataSets(reportPath, out Dictionary<string, XElement> referenceDataSetMap);
                     DataSource[] dataSources = rdlFileIO.GetDataSources(reportPath);
 
-                    var convertedFile = ConvertFile(report, dataSources, referenceDataSetMap);
-                    SaveAndCopyStream(reportName, convertedFile, $"output\\{reportName}_convert.rdl");
+                    // If two or more datasets reference the same datasource, references with duplicated names will appear datasources.
+                    var uniqDatasources = dataSources.Select(ds => ds.Name).Distinct().Select(n => dataSources.First(ds => ds.Name.Equals(n)));
+
+                    var convertedFile = ConvertFile(report, uniqDatasources.ToArray(), referenceDataSetMap);
+                    SaveAndCopyStream(reportName, convertedFile, $"output\\{reportName}_convert.rdl");                                      
 
                     powerBIClient.UploadRDL(reportName + ReportFileExtension, convertedFile);
 
