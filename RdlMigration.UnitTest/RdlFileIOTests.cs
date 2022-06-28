@@ -11,6 +11,7 @@ using Microsoft.Rest;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RdlMigration.ReportServerApi;
+using static RdlMigration.ElementNameConstants;
 
 namespace RdlMigration.UnitTest
 {
@@ -76,6 +77,49 @@ namespace RdlMigration.UnitTest
             Assert.AreEqual(2, references.Count);
             Assert.AreEqual("DataSource1", references[0].Name);
             Assert.IsTrue(references[1].Name.Contains("ds2"));
+        }
+
+        [TestMethod]
+        public void DuplicateDataSource()
+        {
+            string reportPath = "/Report";
+            string dataSet1Name = "Data Set";
+            string dataSet1Path = "/Data Set";
+            string dataSet2Name = "Data Set2";
+            string dataSet2Path = "/Data Set2";
+
+            var mockApp = new Mock<ConvertRDL>();
+            var mockServer = new Mock<IReportingService2010>();
+
+            ItemReferenceData[] referenceDatasDataSets = new ItemReferenceData[]
+            {
+                new ItemReferenceData{Name = dataSet1Name,
+                Reference = dataSet1Path},
+                new ItemReferenceData{Name = dataSet2Name,
+                Reference = dataSet2Path}
+            };
+
+            ItemReferenceData[] referenceDatasDataSource = new ItemReferenceData[]
+            {
+                new ItemReferenceData{Name = "DataSourceNewShare",
+                Reference = "/New Share"},
+            };
+
+            byte[] dataSet1 = File.ReadAllBytes("../../testFiles/one_DataSource_for_two_DataSets/Data Set.rsd");
+            byte[] dataSet2 = File.ReadAllBytes("../../testFiles/one_DataSource_for_two_DataSets/Data Set2.rsd");
+
+
+            mockServer.Setup(p => p.GetItemReferences(reportPath, DataSetConstants.DataSet)).Returns(referenceDatasDataSets);
+            mockServer.Setup(p => p.GetItemDefinition(dataSet1Path)).Returns(dataSet1);
+            mockServer.Setup(p => p.GetItemDefinition(dataSet2Path)).Returns(dataSet2);
+            mockServer.Setup(p => p.GetItemReferences(dataSet1Path, DataSourceConstants.DataSource)).Returns(referenceDatasDataSource);
+            mockServer.Setup(p => p.GetItemReferences(dataSet2Path, DataSourceConstants.DataSource)).Returns(referenceDatasDataSource);
+
+            var sut = new RdlFileIO(mockServer.Object);
+
+            DataSource[] uniqueDataSource = sut.GetUniqueDataSources(reportPath);
+            
+            Assert.AreEqual(uniqueDataSource.Length, 1);          
         }
     }
 }
