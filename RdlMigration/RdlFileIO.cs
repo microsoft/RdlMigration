@@ -341,7 +341,7 @@ namespace RdlMigration
             {
                 string remoteDataSourceName = path.Split('/').Last();
                 remoteDataSourceName = new string(remoteDataSourceName.Where(x => char.IsLetterOrDigit(x) || x == '_').ToArray());
-                dataSourceName = DataSourceConstants.DataSource + dataSourceReferenceNameMap.Count() + '_' + remoteDataSourceName;
+                dataSourceName = DataSourceConstants.DataSource + '_' + remoteDataSourceName + '_' + Guid.NewGuid().ToString().Replace('-', '_');
                 dataSourceReferenceNameMap.TryAdd(path, dataSourceName);
             }
 
