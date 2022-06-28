@@ -229,6 +229,12 @@ namespace RdlMigration
             return retList.ToArray();
         }
 
+        public DataSource[] GetUniqueDataSources(string filePath)
+        {
+            var dataSources = GetDataSources(filePath);
+            return dataSources.Select(ds => ds.Name).Distinct().Select(n => dataSources.First(ds => ds.Name.Equals(n))).ToArray();
+        }
+
         /// <summary>
         ///  Take the dataSource objects grabbed from the report server and write them in a file.
         /// </summary>
