@@ -127,7 +127,7 @@ namespace RdlMigration
                         {
                             string jsonString = returnedJsonStr.First();
                             var returnedJsonDetail = JObject.Parse(jsonString);
-                            errorMessage = returnedJsonDetail["error"]["pbi.error"]["details"][2]["detail"]["value"].Value<string>();
+                            errorMessage = returnedJsonDetail["error"]?["code"]?.Value<string>() ?? jsonString;
                             Trace($"FAILED TO UPLOAD :  {reportName} RequestId:{requestId} {errorMessage}");
                         }
                     }
