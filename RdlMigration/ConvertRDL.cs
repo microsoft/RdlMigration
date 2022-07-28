@@ -99,7 +99,7 @@ namespace RdlMigration
                 try
                 {
                     XElement[] dataSets = rdlFileIO.GetDataSets(reportPath, out Dictionary<string, XElement> referenceDataSetMap);
-                    DataSource[] dataSources = rdlFileIO.GetDataSources(reportPath);
+                    DataSource[] dataSources = rdlFileIO.GetUniqueDataSources(reportPath);
 
                     var convertedFile = ConvertFile(report, dataSources, referenceDataSetMap);
                     SaveAndCopyStream(reportName, convertedFile, $"output\\{reportName}_convert.rdl");

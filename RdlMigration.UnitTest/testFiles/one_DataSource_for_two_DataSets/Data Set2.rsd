@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SharedDataSet xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSet Name="DataSet1">
+    <Query>
+      <DataSourceReference>/New Share</DataSourceReference>
+      <CommandText>SELECT
+  DimReseller.ResellerKey
+  ,DimReseller.GeographyKey
+  ,DimReseller.ResellerAlternateKey
+  ,DimReseller.Phone
+  ,DimReseller.BusinessType
+  ,DimReseller.ResellerName
+  ,DimReseller.NumberEmployees
+  ,DimReseller.OrderFrequency
+  ,DimReseller.OrderMonth
+  ,DimReseller.FirstOrderYear
+  ,DimReseller.LastOrderYear
+  ,DimReseller.ProductLine
+  ,DimReseller.AddressLine1
+  ,DimReseller.AddressLine2
+  ,DimReseller.AnnualSales
+  ,DimReseller.BankName
+  ,DimReseller.MinPaymentType
+  ,DimReseller.MinPaymentAmount
+  ,DimReseller.AnnualRevenue
+  ,DimReseller.YearOpened
+FROM
+  DimReseller</CommandText>
+      <rd:DesignerState>
+        <QueryDefinition xmlns="http://schemas.microsoft.com/ReportingServices/QueryDefinition/Relational">
+          <SelectedColumns>
+            <ColumnExpression ColumnOwner="DimReseller" ColumnName="ResellerKey" />
+            <ColumnExpression ColumnOwner="DimReseller" ColumnName="GeographyKey" />
+            <ColumnExpression ColumnOwner="DimReseller" ColumnName="ResellerAlternateKey" />
+            <ColumnExpression ColumnOwner="DimReseller" ColumnName="Phone" />
+            <ColumnExpression ColumnOwner="DimReseller" ColumnName="BusinessType" />
+            <ColumnExpression ColumnOwner="DimReseller" ColumnName="ResellerName" />
+            <ColumnExpression ColumnOwner="DimReseller" ColumnName="NumberEmployees" />
+            <ColumnExpression ColumnOwner="DimReseller" ColumnName="OrderFrequency" />
+            <ColumnExpression ColumnOwner="DimReseller" ColumnName="OrderMonth" />
+            <ColumnExpression ColumnOwner="DimReseller" ColumnName="FirstOrderYear" />
+            <ColumnExpression ColumnOwner="DimReseller" ColumnName="LastOrderYear" />
+            <ColumnExpression ColumnOwner="DimReseller" ColumnName="ProductLine" />
+            <ColumnExpression ColumnOwner="DimReseller" ColumnName="AddressLine1" />
+            <ColumnExpression ColumnOwner="DimReseller" ColumnName="AddressLine2" />
+            <ColumnExpression ColumnOwner="DimReseller" ColumnName="AnnualSales" />
+            <ColumnExpression ColumnOwner="DimReseller" ColumnName="BankName" />
+            <ColumnExpression ColumnOwner="DimReseller" ColumnName="MinPaymentType" />
+            <ColumnExpression ColumnOwner="DimReseller" ColumnName="MinPaymentAmount" />
+            <ColumnExpression ColumnOwner="DimReseller" ColumnName="AnnualRevenue" />
+            <ColumnExpression ColumnOwner="DimReseller" ColumnName="YearOpened" />
+          </SelectedColumns>
+        </QueryDefinition>
+      </rd:DesignerState>
+    </Query>
+    <Fields>
+      <Field Name="ResellerKey">
+        <DataField>ResellerKey</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="GeographyKey">
+        <DataField>GeographyKey</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="ResellerAlternateKey">
+        <DataField>ResellerAlternateKey</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="BusinessType">
+        <DataField>BusinessType</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="ResellerName">
+        <DataField>ResellerName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="NumberEmployees">
+        <DataField>NumberEmployees</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="OrderFrequency">
+        <DataField>OrderFrequency</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="OrderMonth">
+        <DataField>OrderMonth</DataField>
+        <rd:TypeName>System.Byte</rd:TypeName>
+      </Field>
+      <Field Name="FirstOrderYear">
+        <DataField>FirstOrderYear</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="LastOrderYear">
+        <DataField>LastOrderYear</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="ProductLine">
+        <DataField>ProductLine</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="AddressLine1">
+        <DataField>AddressLine1</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="AddressLine2">
+        <DataField>AddressLine2</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="AnnualSales">
+        <DataField>AnnualSales</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="Phone">
+        <DataField>Phone</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="BankName">
+        <DataField>BankName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="MinPaymentType">
+        <DataField>MinPaymentType</DataField>
+        <rd:TypeName>System.Byte</rd:TypeName>
+      </Field>
+      <Field Name="MinPaymentAmount">
+        <DataField>MinPaymentAmount</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="AnnualRevenue">
+        <DataField>AnnualRevenue</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="YearOpened">
+        <DataField>YearOpened</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+  <rd:ReportServerUrl>http://n172/ReportServer</rd:ReportServerUrl>
+</SharedDataSet>

@@ -229,6 +229,12 @@ namespace RdlMigration
             return retList.ToArray();
         }
 
+        public DataSource[] GetUniqueDataSources(string filePath)
+        {
+            var dataSources = GetDataSources(filePath);
+            return dataSources.Select(ds => ds.Name).Distinct().Select(n => dataSources.First(ds => ds.Name.Equals(n))).ToArray();
+        }
+
         /// <summary>
         ///  Take the dataSource objects grabbed from the report server and write them in a file.
         /// </summary>
@@ -335,7 +341,7 @@ namespace RdlMigration
             {
                 string remoteDataSourceName = path.Split('/').Last();
                 remoteDataSourceName = new string(remoteDataSourceName.Where(x => char.IsLetterOrDigit(x) || x == '_').ToArray());
-                dataSourceName = DataSourceConstants.DataSource + dataSourceReferenceNameMap.Count() + '_' + remoteDataSourceName;
+                dataSourceName = DataSourceConstants.DataSource + '_' + remoteDataSourceName + '_' + Guid.NewGuid().ToString().Replace('-', '_');
                 dataSourceReferenceNameMap.TryAdd(path, dataSourceName);
             }
 

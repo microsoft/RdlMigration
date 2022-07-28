@@ -1,0 +1,200 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SharedDataSet xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSet Name="DataSet1">
+    <Query>
+      <DataSourceReference>/New Share</DataSourceReference>
+      <CommandText>SELECT
+  DimEmployee.EmployeeKey
+  ,DimEmployee.ParentEmployeeKey
+  ,DimEmployee.EmployeeNationalIDAlternateKey
+  ,DimEmployee.ParentEmployeeNationalIDAlternateKey
+  ,DimEmployee.SalesTerritoryKey
+  ,DimEmployee.FirstName
+  ,DimEmployee.LastName
+  ,DimEmployee.MiddleName
+  ,DimEmployee.NameStyle
+  ,DimEmployee.Title
+  ,DimEmployee.HireDate
+  ,DimEmployee.BirthDate
+  ,DimEmployee.LoginID
+  ,DimEmployee.EmailAddress
+  ,DimEmployee.Phone
+  ,DimEmployee.MaritalStatus
+  ,DimEmployee.EmergencyContactName
+  ,DimEmployee.EmergencyContactPhone
+  ,DimEmployee.SalariedFlag
+  ,DimEmployee.Gender
+  ,DimEmployee.PayFrequency
+  ,DimEmployee.BaseRate
+  ,DimEmployee.VacationHours
+  ,DimEmployee.SickLeaveHours
+  ,DimEmployee.CurrentFlag
+  ,DimEmployee.SalesPersonFlag
+  ,DimEmployee.DepartmentName
+  ,DimEmployee.StartDate
+  ,DimEmployee.EndDate
+  ,DimEmployee.Status
+FROM
+  DimEmployee</CommandText>
+      <rd:DesignerState>
+        <QueryDefinition xmlns="http://schemas.microsoft.com/ReportingServices/QueryDefinition/Relational">
+          <SelectedColumns>
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="EmployeeKey" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="ParentEmployeeKey" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="EmployeeNationalIDAlternateKey" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="ParentEmployeeNationalIDAlternateKey" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="SalesTerritoryKey" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="FirstName" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="LastName" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="MiddleName" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="NameStyle" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="Title" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="HireDate" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="BirthDate" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="LoginID" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="EmailAddress" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="Phone" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="MaritalStatus" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="EmergencyContactName" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="EmergencyContactPhone" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="SalariedFlag" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="Gender" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="PayFrequency" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="BaseRate" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="VacationHours" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="SickLeaveHours" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="CurrentFlag" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="SalesPersonFlag" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="DepartmentName" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="StartDate" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="EndDate" />
+            <ColumnExpression ColumnOwner="DimEmployee" ColumnName="Status" />
+          </SelectedColumns>
+        </QueryDefinition>
+      </rd:DesignerState>
+    </Query>
+    <Fields>
+      <Field Name="EmployeeKey">
+        <DataField>EmployeeKey</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="ParentEmployeeKey">
+        <DataField>ParentEmployeeKey</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="EmployeeNationalIDAlternateKey">
+        <DataField>EmployeeNationalIDAlternateKey</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="ParentEmployeeNationalIDAlternateKey">
+        <DataField>ParentEmployeeNationalIDAlternateKey</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="SalesTerritoryKey">
+        <DataField>SalesTerritoryKey</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="FirstName">
+        <DataField>FirstName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="LastName">
+        <DataField>LastName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="MiddleName">
+        <DataField>MiddleName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="NameStyle">
+        <DataField>NameStyle</DataField>
+        <rd:TypeName>System.Boolean</rd:TypeName>
+      </Field>
+      <Field Name="Title">
+        <DataField>Title</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="HireDate">
+        <DataField>HireDate</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="BirthDate">
+        <DataField>BirthDate</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="LoginID">
+        <DataField>LoginID</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="EmailAddress">
+        <DataField>EmailAddress</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="Phone">
+        <DataField>Phone</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="MaritalStatus">
+        <DataField>MaritalStatus</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="EmergencyContactName">
+        <DataField>EmergencyContactName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="EmergencyContactPhone">
+        <DataField>EmergencyContactPhone</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="SalariedFlag">
+        <DataField>SalariedFlag</DataField>
+        <rd:TypeName>System.Boolean</rd:TypeName>
+      </Field>
+      <Field Name="Gender">
+        <DataField>Gender</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="PayFrequency">
+        <DataField>PayFrequency</DataField>
+        <rd:TypeName>System.Byte</rd:TypeName>
+      </Field>
+      <Field Name="BaseRate">
+        <DataField>BaseRate</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="VacationHours">
+        <DataField>VacationHours</DataField>
+        <rd:TypeName>System.Int16</rd:TypeName>
+      </Field>
+      <Field Name="SickLeaveHours">
+        <DataField>SickLeaveHours</DataField>
+        <rd:TypeName>System.Int16</rd:TypeName>
+      </Field>
+      <Field Name="CurrentFlag">
+        <DataField>CurrentFlag</DataField>
+        <rd:TypeName>System.Boolean</rd:TypeName>
+      </Field>
+      <Field Name="SalesPersonFlag">
+        <DataField>SalesPersonFlag</DataField>
+        <rd:TypeName>System.Boolean</rd:TypeName>
+      </Field>
+      <Field Name="DepartmentName">
+        <DataField>DepartmentName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="StartDate">
+        <DataField>StartDate</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="EndDate">
+        <DataField>EndDate</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="Status">
+        <DataField>Status</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+  <rd:ReportServerUrl>http://n172/ReportServer</rd:ReportServerUrl>
+</SharedDataSet>
