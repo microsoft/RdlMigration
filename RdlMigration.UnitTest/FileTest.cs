@@ -1,10 +1,14 @@
 ﻿// Copyright (c) 2019 Microsoft Corporation. All Rights Reserved.
 // Licensed under the MIT License (MIT)
 
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RdlMigration.ReportServerApi;
 
 namespace RdlMigration.UnitTest
 {
@@ -187,11 +191,12 @@ namespace RdlMigration.UnitTest
         {
             TestWithPath(downloadPath + test + ".rdl", downloadPath + test + ".rds", downloadPath + test + "_DataSets");
         }
+        
         private void TestWithPath(string rdlFilePath, string dataSourcePath, string dataSetPath)
         {
             var app = new ConvertRDL();
-            var dataSources = app.ReadDataSourceFile(dataSourcePath);
-            var dataSets = app.ReadDataSet(dataSetPath);
+            var dataSources = ReadDataSourceFile(dataSourcePath);
+            var dataSets = ReadDataSet(rdlFilePath, dataSetPath);
 
             //var dataSets = RdlFileIO.WriteDataSetContent(rdlFilePath, "aka" ,out DataSource[] a);
             Directory.CreateDirectory(outputPath);
@@ -199,6 +204,103 @@ namespace RdlMigration.UnitTest
             var file = app.ConvertFile(rdlFilePath, dataSources, dataSets, outputPath);
 
             ValidateSchema(file);
+        }
+
+        /// <summary>
+        /// Reads a datasource file and take it into DataSource object.
+        /// </summary>
+        /// <param name="filePath">The local rds File path.</param>
+        /// <returns> an array of DataSource Object.</returns>
+        public DataSource[] ReadDataSourceFile(string filePath)
+        {
+            XDocument doc = XDocument.Load(filePath);
+            var dataSources = doc.Element(ElementNameConstants.DataSourceConstants.DataSources) == null ? new XElement[0] : doc.Element(ElementNameConstants.DataSourceConstants.DataSources).Elements();
+            DataSource[] retDataSourceArray = new DataSource[dataSources.Count()];
+            int i = 0;
+            foreach (XElement childNode in dataSources)
+            {
+                DataSource temp = new DataSource
+                {
+                    Name = childNode.Attribute("Name").Value
+                };
+                DataSourceDefinition currDataSourceDefinition = new DataSourceDefinition
+                {
+                    Extension = childNode.Element(ElementNameConstants.DataSourceConstants.Extension).Value,
+                    ConnectString = childNode.Element(ElementNameConstants.DataSourceConstants.ConnectString).Value,
+                    UseOriginalConnectString = childNode.Element(ElementNameConstants.DataSourceConstants.UseOriginalConnectString).Value == "True",
+                    OriginalConnectStringExpressionBased = childNode.Element(ElementNameConstants.DataSourceConstants.OriginalConnectStringExpressionBased).Value == "True"
+                };
+
+                Enum.TryParse(childNode.Element(ElementNameConstants.DataSourceConstants.CredentialRetrieval).Value, true, out CredentialRetrievalEnum credentialRetrieval);
+                currDataSourceDefinition.CredentialRetrieval = credentialRetrieval;
+
+                currDataSourceDefinition.Enabled = childNode.Element(ElementNameConstants.DataSourceConstants.Enabled).Value == "True";
+
+                temp.Item = currDataSourceDefinition;
+
+                retDataSourceArray[i++] = temp;
+            }
+
+            return retDataSourceArray;
+        }
+
+        /// <summary>
+        ///  Reads a datasource file and take it into DataSource object.
+        /// </summary>
+        /// <param name="dirPath">The local rds File path.</param>
+        /// <returns> The Dictonary of Data Set Name and Data Set XElement.</returns>
+        private Dictionary<KeyValuePair<string, string>, XElement> ReadDataSet(string rdlLocalFilePath, string dirPath, Dictionary<string, string> dataSetNameRef = null)
+        {
+            var retMap = new Dictionary<KeyValuePair<string, string>, XElement>();
+            string[] filePaths;
+            try
+            {
+                filePaths = Directory.GetFiles(dirPath);
+            }
+            catch (Exception)
+            {
+                return retMap;
+            }
+
+            var dataSetMap = GetDataSetsMap(rdlLocalFilePath);
+            foreach (string filename in filePaths)
+            {
+                var currDataSetNode = ReadDataSetFile(filename);
+                var dataSetName = currDataSetNode.Attribute("Name").Value;
+
+                // for tests that have the same dataset referenced multiple times, we need to add
+                // to the map for each time its found.
+                foreach (var rdlDataSetName in dataSetMap[dataSetName])
+                {
+                    retMap.Add(new KeyValuePair<string, string>(rdlLocalFilePath, rdlDataSetName), currDataSetNode);
+                }
+            }
+
+            return retMap;
+        }
+        
+        public Dictionary<string, List<string>> GetDataSetsMap(string rdlFilePath)
+        {
+            var result = new Dictionary<string, List<string>>();
+            XDocument doc = XDocument.Load(rdlFilePath);
+            var dataSets = doc.Descendants().Where(p => p.Name.LocalName == ElementNameConstants.DataSetConstants.SharedDataSetReference);
+            foreach(var dataSet in dataSets)
+            {
+                if (!result.ContainsKey(dataSet.Value))
+                {
+                    result.Add(dataSet.Value, new List<string>());
+                }
+
+                result[dataSet.Value].Add(dataSet.Parent.Parent.Attribute("Name").Value);
+            }
+            return result;
+        }
+
+        private XElement ReadDataSetFile(string filePath)
+        {
+            XDocument doc = XDocument.Load(filePath);
+            var dataSets = (XElement)doc.Root.FirstNode;
+            return dataSets;
         }
 
         private void ValidateSchema(string filePath)
