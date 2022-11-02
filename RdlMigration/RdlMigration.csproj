@@ -96,6 +96,7 @@ OpenAPI spec version: 2.0
   <ItemGroup>
     <Compile Include="ConvertRDL.cs" />
     <Compile Include="ElementNameConstants.cs" />
+    <Compile Include="OriginTagging.cs" />
     <Compile Include="PowerBIClientWrapper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
