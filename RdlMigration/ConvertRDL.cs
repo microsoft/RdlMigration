@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Microsoft.PowerBI.Api.V2.Models;
 using Microsoft.Rest;
 using Newtonsoft.Json.Linq;
 using RdlMigration.ReportServerApi;
@@ -207,6 +208,8 @@ namespace RdlMigration
             ConvertFileWithDataSet(rdlFilePath, doc, dataSetDict);
             ConvertFileWithDataSource(doc, dataSources);
             DiscoverSubreports(doc).ForEach(reportPaths.Enqueue);
+            OriginTagging.Ensure(doc);
+
             doc.Save(outputFileName);
 
             return outputFileName;
