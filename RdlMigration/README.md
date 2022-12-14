@@ -10,9 +10,9 @@ In command window, run RdlMigration \<urlEndpoint> \<path> \<workspaceName> \<cl
 
 The default save Directory is in ./test/
 
-* ### If successfully converted you will see a sucessful massage in command window and a file called **S2D_Filename.rdl** in the specificed folder/Directory
+* ### If successfully converted you will see a sucessful message in command window and a file called **S2D_Filename.rdl** in the specificed folder/Directory
 
-* ### If error occured it will throw the error massage in the command window
+* ### If error occured it will throw the error message in the command window
 
 
 ## Unit Testing:
