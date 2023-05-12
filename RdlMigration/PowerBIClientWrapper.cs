@@ -123,10 +123,6 @@ namespace RdlMigration
             if (groups.Count() == 1)
             {
                 workspace = groups.First();
-                if (workspace.IsOnDedicatedCapacity == false)
-                {
-                    throw new Exception($"WORKSPACE {workspaceName} IS NOT A PREMIUM WORKSPACE. Only premium workspaces can upload reports");
-                }
                 var reportNames = reportsClient.GetReportsInGroup(workspace.Id).Value.Select(report => report.Name);
                 workspaceReports = new HashSet<string>(reportNames);
                 return workspace;
@@ -137,7 +133,7 @@ namespace RdlMigration
             }
             else
             {
-                throw new Exception($"MULTIPLE PREMIUM WORKSPACE {workspaceName} FOUND. This should not happen, make sure you have valid workspaces");
+                throw new Exception($"MULTIPLE WORKSPACE {workspaceName} FOUND. This should not happen, make sure you have valid workspaces");
             }
         }
     }
