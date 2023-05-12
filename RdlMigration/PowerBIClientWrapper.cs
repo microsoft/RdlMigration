@@ -133,7 +133,7 @@ namespace RdlMigration
             }
             else
             {
-                throw new Exception($"MULTIPLE PREMIUM WORKSPACE {workspaceName} FOUND. This should not happen, make sure you have valid workspaces");
+                throw new Exception($"MULTIPLE WORKSPACE {workspaceName} FOUND. This should not happen, make sure you have valid workspaces");
             }
         }
     }
